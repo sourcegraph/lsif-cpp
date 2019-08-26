@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -ex
+
+yarn -s
+
+yarn run tsc-watch --noEmit --noClear --onSuccess "bash -c 'yarn run tsc --project tsconfig.json && node -r source-map-support/register out/main.js'"
