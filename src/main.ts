@@ -114,8 +114,9 @@ async function main(): Promise<void> {
         refs.add(stringifyLocation(ref))
     }
 
+    const dp = mkDispatch(link)
     for (const csvFile of glob.sync(csvFileGlob)) {
-        await scanCsvFile({ csvFile, link })
+        await scanCsvFile({ csvFile, cb: dp })
     }
 
     docs.forEach(doc => emitDocsBegin({ projectRoot, doc }))
@@ -155,21 +156,36 @@ interface FilePosition {
 
 type GenericEntry = { kind: string; value: Dictionary<string> }
 
+type Link = (info: { def: lsp.Location; ref: lsp.Location }) => void
+
 async function scanCsvFile({
     csvFile,
-    link,
+    cb,
 }: {
     csvFile: string
-    link: (info: { def: lsp.Location; ref: lsp.Location }) => void
+    cb: (genericEntry: GenericEntry) => void
 }) {
     await forEachLine({
         filePath: csvFile,
-        onLine: line => {
-            const entry = ericParse(line)
-            if (entry.kind !== 'ref') {
-                // console.log('skipping', line)
-                return
-            }
+        onLine: line => cb(ericParse(line)),
+    })
+}
+
+// Cross-file j2d through a header file looks like this:
+//
+// ref,defloc,"five.h:2:4",loc,"main.cpp:13:2",locend,"main.cpp:13:6",kind,"function",name,"five",qualname,"five(int)"
+// decldef,name,"five",qualname,"five(int)",loc,"five.h:2:4",locend,"five.h:2:8",defloc,"five.cpp:3:4",kind,"function"
+//
+// Trimming that down to what's relevant:
+//
+// ref,defloc,"five.h:2:4",loc,"main.cpp:13:2"
+// decldef,loc,"five.h:2:4",defloc,"five.cpp:3:4"
+//
+// So there's a foreign key constraint between ref.defloc and decldef.loc
+
+function mkDispatch(link: Link): (entry: GenericEntry) => void {
+    const dispatchByKind: Record<'ref' | 'decldef', (entry: GenericEntry) => void> = {
+        ref: entry => {
             const location = parseLocation(entry.value.loc, entry.value.locend)
             const defloc = parseFilePosition(entry.value.defloc)
             link({
@@ -181,10 +197,23 @@ async function scanCsvFile({
                 },
                 ref: location,
             })
-            // TODO handle nuances with merging `decldef`s and composing refs
-            // console.log(util.inspect(entry, { depth: 5, colors: true }))
         },
-    })
+        decldef: entry => {
+            // console.error('decldef', entry)
+        },
+    }
+
+    return entry => {
+        const dispatch: ((entry: GenericEntry) => void) | undefined =
+            dispatchByKind[entry.kind]
+        if (!dispatch) {
+            // console.log('skipping', line)
+            return
+        }
+        dispatch(entry)
+        // TODO handle nuances with merging `decldef`s and composing refs
+        // console.log(util.inspect(entry, { depth: 5, colors: true }))
+    }
 }
 
 function emit<T extends Edge | Vertex>(t: T): void {
