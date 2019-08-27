@@ -40,6 +40,7 @@ import {
     textDocument_definition,
     item,
     textDocument_references,
+    ItemEdgeProperties,
 } from 'lsif-protocol'
 import * as lsp from 'vscode-languageserver-protocol'
 import * as P from 'parsimmon'
@@ -69,8 +70,9 @@ async function main(): Promise<void> {
     emitProjectBegin()
 
     const docs = new Set<string>()
-    const rangesByDoc = new Map<string, Map<string, lsp.Location>>()
-    const defs = new Set<string>()
+    const rangesByDoc = new Map<string, Set<string>>()
+    const refsByDef = new Map<string, Set<string>>()
+    const locByRange = new Map<string, lsp.Location>()
 
     function onDoc(doc: string): void {
         if (!docs.has(doc)) {
@@ -78,7 +80,7 @@ async function main(): Promise<void> {
         }
 
         if (!rangesByDoc.has(doc)) {
-            rangesByDoc.set(doc, new Map())
+            rangesByDoc.set(doc, new Set())
         }
     }
 
@@ -89,8 +91,9 @@ async function main(): Promise<void> {
             throw new Error(`rangesByDoc does not contain ${loc.uri}`)
         }
         if (!ranges.has(stringifyLocation(loc))) {
-            ranges.set(stringifyLocation(loc), loc)
+            ranges.add(stringifyLocation(loc))
         }
+        locByRange.set(stringifyLocation(loc), loc)
     }
 
     function link({
@@ -103,77 +106,12 @@ async function main(): Promise<void> {
         onLoc(def)
         onLoc(ref)
 
-        if (!defs.has(stringifyLocation(def))) {
-            defs.add(stringifyLocation(def))
-
-            emit<ResultSet>({
-                id: 'resultSet:' + stringifyLocation(def),
-                label: VertexLabels.resultSet,
-                type: ElementTypes.vertex,
-            })
-
-            emit<next>({
-                id: 'next:' + stringifyLocation(def),
-                type: ElementTypes.edge,
-                label: EdgeLabels.next,
-                outV: stringifyLocation(def),
-                inV: 'resultSet:' + stringifyLocation(def),
-            })
-
-            emit<DefinitionResult>({
-                id: 'definition:' + stringifyLocation(def),
-                label: VertexLabels.definitionResult,
-                type: ElementTypes.vertex,
-            })
-
-            emit<textDocument_definition>({
-                id: 'textDocument/definition:' + stringifyLocation(def),
-                type: ElementTypes.edge,
-                label: EdgeLabels.textDocument_definition,
-                outV: 'resultSet:' + stringifyLocation(def),
-                inV: 'definition:' + stringifyLocation(def),
-            })
-
-            emit<item>({
-                id: 'item:textDocument/definition:' + stringifyLocation(def),
-                type: ElementTypes.edge,
-                label: EdgeLabels.item,
-                outV: 'definition:' + stringifyLocation(def),
-                inVs: [stringifyLocation(def)],
-                document: 'document:' + def.uri,
-            })
-
-            emit<ReferenceResult>({
-                id: 'reference:' + stringifyLocation(def),
-                label: VertexLabels.referenceResult,
-                type: ElementTypes.vertex,
-            })
-
-            emit<textDocument_references>({
-                id: 'textDocument/references:' + stringifyLocation(def),
-                type: ElementTypes.edge,
-                label: EdgeLabels.textDocument_references,
-                outV: 'resultSet:' + stringifyLocation(def),
-                inV: 'reference:' + stringifyLocation(def),
-            })
-
-            emit<item>({
-                id: 'item:textDocument/references:' + stringifyLocation(def),
-                type: ElementTypes.edge,
-                label: EdgeLabels.item,
-                outV: 'reference:' + stringifyLocation(def),
-                inVs: [stringifyLocation(def)],
-                document: 'document:' + def.uri,
-            })
+        let refs = refsByDef.get(stringifyLocation(def))
+        if (!refs) {
+            refs = new Set()
+            refsByDef.set(stringifyLocation(def), refs)
         }
-
-        emit<next>({
-            id: 'next:' + stringifyLocation(ref),
-            type: ElementTypes.edge,
-            label: EdgeLabels.next,
-            outV: stringifyLocation(ref),
-            inV: 'resultSet:' + stringifyLocation(def),
-        })
+        refs.add(stringifyLocation(ref))
     }
 
     for (const csvFile of glob.sync(csvFileGlob)) {
@@ -182,7 +120,25 @@ async function main(): Promise<void> {
 
     docs.forEach(doc => emitDocsBegin({ projectRoot, doc }))
 
+    Array.from(locByRange.keys()).forEach((range, _) => {
+        const loc = locByRange.get(range)
+        if (!loc) {
+            throw new Error('Unable to look up loc by range')
+        }
+        emitRange(loc)
+    })
+
+    emitDefsRefs({ refsByDef, locByRange })
+
     emitDocsEnd({ docs, rangesByDoc })
+
+    emit<contains>({
+        id: 'projectContains',
+        type: ElementTypes.edge,
+        label: EdgeLabels.contains,
+        outV: 'project',
+        inVs: Array.from(docs).map(doc => 'document:' + doc),
+    })
 
     emitProjectEnd()
 }
@@ -244,12 +200,108 @@ function emitRange(loc: lsp.Location) {
     })
 }
 
+function emitDefsRefs({
+    refsByDef,
+    locByRange,
+}: {
+    refsByDef: Map<string, Set<string>>
+    locByRange: Map<string, lsp.Location>
+}): void {
+    refsByDef.forEach((refs, def) => {
+        const defLoc = locByRange.get(def)
+        if (!defLoc) {
+            throw new Error('Unable to look up def')
+        }
+
+        emit<ResultSet>({
+            id: 'resultSet:' + def,
+            label: VertexLabels.resultSet,
+            type: ElementTypes.vertex,
+        })
+
+        emit<next>({
+            id: 'next:' + def,
+            type: ElementTypes.edge,
+            label: EdgeLabels.next,
+            outV: def,
+            inV: 'resultSet:' + def,
+        })
+
+        emit<DefinitionResult>({
+            id: 'definition:' + def,
+            label: VertexLabels.definitionResult,
+            type: ElementTypes.vertex,
+        })
+
+        emit<textDocument_definition>({
+            id: 'textDocument/definition:' + def,
+            type: ElementTypes.edge,
+            label: EdgeLabels.textDocument_definition,
+            outV: 'resultSet:' + def,
+            inV: 'definition:' + def,
+        })
+
+        emit<item>({
+            id: 'item:textDocument/definition:' + def,
+            type: ElementTypes.edge,
+            label: EdgeLabels.item,
+            outV: 'definition:' + def,
+            inVs: [def],
+            document: 'document:' + defLoc.uri,
+        })
+
+        emit<ReferenceResult>({
+            id: 'reference:' + def,
+            label: VertexLabels.referenceResult,
+            type: ElementTypes.vertex,
+        })
+
+        emit<textDocument_references>({
+            id: 'textDocument/references:' + def,
+            type: ElementTypes.edge,
+            label: EdgeLabels.textDocument_references,
+            outV: 'resultSet:' + def,
+            inV: 'reference:' + def,
+        })
+
+        emit<item>({
+            id: 'item:textDocument/references:' + def,
+            type: ElementTypes.edge,
+            label: EdgeLabels.item,
+            outV: 'reference:' + def,
+            inVs: [def],
+            property: ItemEdgeProperties.definitions,
+            document: 'document:' + defLoc.uri,
+        })
+
+        refs.forEach(ref => {
+            emit<next>({
+                id: 'next:' + ref,
+                type: ElementTypes.edge,
+                label: EdgeLabels.next,
+                outV: ref,
+                inV: 'resultSet:' + def,
+            })
+        })
+
+        emit<item>({
+            id: 'item:textDocument/references:' + def,
+            type: ElementTypes.edge,
+            label: EdgeLabels.item,
+            outV: 'reference:' + def,
+            inVs: Array.from(refs),
+            property: ItemEdgeProperties.references,
+            document: 'document:' + defLoc.uri,
+        })
+    })
+}
+
 function emitDocsEnd({
     docs,
     rangesByDoc,
 }: {
     docs: Set<string>
-    rangesByDoc: Map<string, Map<string, lsp.Location>>
+    rangesByDoc: Map<string, Set<string>>
 }) {
     docs.forEach(doc => {
         const ranges = rangesByDoc.get(doc)
@@ -258,8 +310,6 @@ function emitDocsEnd({
                 `rangesByDoc didn't contain doc ${doc}, but contained ${rangesByDoc.keys()}`
             )
         }
-
-        ranges.forEach((loc, _) => emitRange(loc))
 
         emit<contains>({
             id: 'contains:' + doc,
