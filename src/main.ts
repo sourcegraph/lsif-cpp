@@ -129,6 +129,8 @@ async function main(): Promise<void> {
         emitRange(loc)
     })
 
+    followTransitiveDefsDepth1(refsByDef)
+
     emitDefsRefs({ refsByDef, locByRange })
 
     emitDocsEnd({ docs, rangesByDoc })
@@ -146,7 +148,7 @@ async function main(): Promise<void> {
 main()
 
 function stringifyLocation(loc: lsp.Location): string {
-    return `${loc.uri}:${loc.range.start.line}:${loc.range.start.character}-${loc.range.end.line}:${loc.range.end.character}`
+    return `${loc.uri}:${loc.range.start.line}:${loc.range.start.character}`
 }
 
 interface FilePosition {
@@ -171,6 +173,20 @@ async function scanCsvFile({
     })
 }
 
+// mutates arg
+function followTransitiveDefsDepth1(refsByDef: Map<string, Set<string>>): void {
+    for (const [def, refs] of Array.from(refsByDef.entries())) {
+        for (const ref of Array.from(refs)) {
+            const transitiveRefs: Set<string> | undefined = refsByDef.get(ref)
+            if (!transitiveRefs) {
+                continue
+            }
+            transitiveRefs.forEach(tref => refs.add(tref))
+            delete refsByDef[ref]
+        }
+    }
+}
+
 // Cross-file j2d through a header file looks like this:
 //
 // ref,defloc,"five.h:2:4",loc,"main.cpp:13:2",locend,"main.cpp:13:6",kind,"function",name,"five",qualname,"five(int)"
@@ -184,7 +200,10 @@ async function scanCsvFile({
 // So there's a foreign key constraint between ref.defloc and decldef.loc
 
 function mkDispatch(link: Link): (entry: GenericEntry) => void {
-    const dispatchByKind: Record<'ref' | 'decldef', (entry: GenericEntry) => void> = {
+    const dispatchByKind: Record<
+        'ref' | 'decldef',
+        (entry: GenericEntry) => void
+    > = {
         ref: entry => {
             const location = parseLocation(entry.value.loc, entry.value.locend)
             const defloc = parseFilePosition(entry.value.defloc)
@@ -199,7 +218,20 @@ function mkDispatch(link: Link): (entry: GenericEntry) => void {
             })
         },
         decldef: entry => {
-            // console.error('decldef', entry)
+            if (!entry.value.defloc) {
+                return
+            }
+            const location = parseLocation(entry.value.loc, entry.value.locend)
+            const defloc = parseFilePosition(entry.value.defloc)
+            link({
+                def: {
+                    uri: defloc.uri,
+                    // Using the same position for start/end is wrong
+                    // Need to fill in the right `end` when we scan an entry with the same `start`
+                    range: { start: defloc.position, end: defloc.position },
+                },
+                ref: location,
+            })
         },
     }
 
