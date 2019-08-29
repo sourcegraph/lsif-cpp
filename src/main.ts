@@ -10,6 +10,8 @@ import {
     difference,
     groupBy,
     map as mapObject,
+    map,
+    forEach,
 } from 'lodash'
 import {
     Document,
@@ -345,15 +347,19 @@ function emitDefsRefs({
             })
         })
 
-        emit<item>({
-            id: 'item:textDocument/references:references:' + def,
-            type: ElementTypes.edge,
-            label: EdgeLabels.item,
-            outV: 'reference:' + def,
-            inVs: Array.from(refs),
-            property: ItemEdgeProperties.references,
-            document: 'document:' + defLoc.uri,
-        })
+        forEach(
+            groupBy(Array.from(refs), ref => parseFilePosition(ref).uri),
+            (refsForCurrentUri, uri) =>
+                emit<item>({
+                    id: 'item:textDocument/references:references:' + def,
+                    type: ElementTypes.edge,
+                    label: EdgeLabels.item,
+                    outV: 'reference:' + def,
+                    inVs: Array.from(refsForCurrentUri),
+                    property: ItemEdgeProperties.references,
+                    document: 'document:' + uri,
+                })
+        )
     })
 }
 
