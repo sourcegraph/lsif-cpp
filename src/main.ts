@@ -326,7 +326,7 @@ function emitDefsRefs({
         })
 
         emit<item>({
-            id: 'item:textDocument/references:' + def,
+            id: 'item:textDocument/references:definitions:' + def,
             type: ElementTypes.edge,
             label: EdgeLabels.item,
             outV: 'reference:' + def,
@@ -346,7 +346,7 @@ function emitDefsRefs({
         })
 
         emit<item>({
-            id: 'item:textDocument/references:' + def,
+            id: 'item:textDocument/references:references:' + def,
             type: ElementTypes.edge,
             label: EdgeLabels.item,
             outV: 'reference:' + def,
