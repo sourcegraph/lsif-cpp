@@ -133,7 +133,7 @@ async function main(): Promise<void> {
 
     emitDefsRefs({ refsByDef, locByRange })
 
-    emitDocsEnd({ docs, rangesByDoc })
+    emitDocsEnd({ projectRoot, docs, rangesByDoc })
 
     emit<contains>({
         id: 'projectContains',
@@ -358,9 +358,11 @@ function emitDefsRefs({
 }
 
 function emitDocsEnd({
+    projectRoot,
     docs,
     rangesByDoc,
 }: {
+    projectRoot: string
     docs: Set<string>
     rangesByDoc: Map<string, Set<string>>
 }) {
@@ -382,7 +384,7 @@ function emitDocsEnd({
 
         emit<DocumentEvent>({
             id: 'documentEnd:' + doc,
-            data: doc,
+            data: 'document:' + doc,
             type: ElementTypes.vertex,
             label: VertexLabels.event,
             kind: EventKind.end,
@@ -408,7 +410,7 @@ function emitDocsBegin({
     })
     emit<DocumentEvent>({
         id: 'documentBegin:' + doc,
-        data: doc,
+        data: 'document:' + doc,
         type: ElementTypes.vertex,
         label: VertexLabels.event,
         kind: EventKind.begin,
