@@ -351,7 +351,7 @@ function emitDefsRefs({
             groupBy(Array.from(refs), ref => parseFilePosition(ref).uri),
             (refsForCurrentUri, uri) =>
                 emit<item>({
-                    id: 'item:textDocument/references:references:' + def,
+                    id: 'item:textDocument/references:references:' + def + ':' + uri,
                     type: ElementTypes.edge,
                     label: EdgeLabels.item,
                     outV: 'reference:' + def,
