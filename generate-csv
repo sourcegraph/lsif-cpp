@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -z "$1" ] || [ -z "$ABSOUTDIR" ] || [ -z "$ABSROOTDIR" ] || [ "$1" = "--help" ]; then
+  echo "Usage: $0 <cmd>"
+  echo
+  echo "Arguments:"
+  echo "- <cmd> the build command for your project, MUST use \$CXX instead of clang/clang++/gcc/g++ directly, CWD set to ABSROOTDIR"
+  echo
+  echo "Environment variables:"
+  echo "- ABSOUTDIR  (required) absolute path to directory in which to write CSV output"
+  echo "- ABSROOTDIR (required) absolute path to directory which contains source code"
+  echo "- CLEAN      (optional) removes existing *.csv from ABSOUTDIR before running"
+  echo
+  echo "Example:"
+  echo
+  echo "  env CLEAN=true ABSROOTDIR=\$PWD/examples/five/root ABSOUTDIR=\$PWD/examples/five/output ./generate-csv \"\\\$CXX -c /host/root/*.cpp ; ls /host/output\""
+  echo
+  echo "Prerequisites:"
+  echo "- https://github.com/mozilla/dxr is checked out at ../../mozilla/dxr"
+  echo "- A docker container named 'docker_dev' exists (built by DXR)"
+  echo "- dxr/plugins/clang/libclang-index-plugin.so exists in ../../mozilla/dxr (built by running make inside dxr/plugins/clang)"
+  exit 1
+fi
+
+if [ -n "$CLEAN" ]; then
+  echo "Cleaning $ABSOUTDIR/*.csv"
+  rm -f "$ABSOUTDIR"/*.csv
+fi
+
+cmd="$1"
+
+export CXX="clang++ -Xclang -load -Xclang /home/dxr/dxr/dxr/plugins/clang/libclang-index-plugin.so -Xclang -add-plugin -Xclang dxr-index -Xclang -plugin-arg-dxr-index -Xclang /host/root"
+echo "Running... $cmd"
+
+docker run \
+  --rm \
+  -e CXX="$CXX" \
+  -e DXR_CXX_CLANG_TEMP_FOLDER=/host/output \
+  -v "$ABSOUTDIR":/host/output \
+  -v "$ABSROOTDIR":/host/root \
+  -w /host/root \
+  -v "$PWD"/../../mozilla/dxr:/home/dxr/dxr:Z \
+  docker_dev \
+  bash -c "$cmd"
+
+echo
+echo "Generated $(find "$ABSOUTDIR" -maxdepth 1 -mindepth 1 -name "*.csv" | wc -l | awk '{ print $1 }') .csv files. Output location: $ABSOUTDIR/*.csv"
