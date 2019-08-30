@@ -190,7 +190,7 @@ function followTransitiveDefsDepth1(refsByDef: Map<string, Set<string>>): void {
                 continue
             }
             transitiveRefs.forEach(tref => refs.add(tref))
-            delete refsByDef[ref]
+            refsByDef.delete(ref)
         }
     }
 }
