@@ -62,14 +62,14 @@ type Emit = <T extends Edge | Vertex>(item: T) => Promise<void>
 
 export async function index({
     csvFileGlob,
-    projectRoot,
+    root,
     emit,
 }: {
     csvFileGlob: string
-    projectRoot: string
+    root: string
     emit: Emit
 }): Promise<void> {
-    await emit(makeMeta(projectRoot, csvFileGlob))
+    await emit(makeMeta(root, csvFileGlob))
     await emit(makeProject())
     await emit(makeProjectBegin())
 
@@ -124,7 +124,7 @@ export async function index({
     }
 
     for (const doc of Array.from(docs)) {
-        await emitDocsBegin({ projectRoot, doc, emit })
+        await emitDocsBegin({ root, doc, emit })
     }
 
     for (const range of Array.from(locByRange.keys())) {
@@ -143,7 +143,7 @@ export async function index({
 
     await emitDefsRefs({ refsByDef, locByRange, emit })
 
-    await emitDocsEnd({ projectRoot, docs, rangesByDoc, emit })
+    await emitDocsEnd({ docs, rangesByDoc, emit })
 
     await emit<contains>({
         id: 'projectContains',
@@ -373,12 +373,10 @@ async function emitDefsRefs({
 }
 
 async function emitDocsEnd({
-    projectRoot,
     docs,
     rangesByDoc,
     emit,
 }: {
-    projectRoot: string
     docs: Set<string>
     rangesByDoc: Map<string, Set<string>>
     emit: Emit
@@ -411,11 +409,11 @@ async function emitDocsEnd({
 }
 
 async function emitDocsBegin({
-    projectRoot,
+    root,
     doc,
     emit,
 }: {
-    projectRoot: string
+    root: string
     doc: string
     emit: Emit
 }): Promise<void> {
@@ -423,9 +421,9 @@ async function emitDocsBegin({
         id: 'document:' + doc,
         type: ElementTypes.vertex,
         label: VertexLabels.document,
-        uri: 'file://' + path.join(projectRoot, doc),
+        uri: 'file:///' + doc,
         languageId: 'cpp',
-        contents: fs.readFileSync(path.join(projectRoot, doc)).toString('base64'),
+        contents: fs.readFileSync(path.join(root, doc)).toString('base64'),
     })
     await emit<DocumentEvent>({
         id: 'documentBegin:' + doc,
@@ -468,17 +466,17 @@ function makeProject(): Project {
     }
 }
 
-function makeMeta(projectRoot: string, csvFileGlob: string): MetaData {
+function makeMeta(root: string, csvFileGlob: string): MetaData {
     return {
         id: 'meta',
         type: ElementTypes.vertex,
         label: VertexLabels.metaData,
-        projectRoot: 'file://' + projectRoot,
+        projectRoot: 'file:///',
         version: '0.4.0',
         positionEncoding: 'utf-16',
         toolInfo: {
             name: 'lsif-cpp',
-            args: [csvFileGlob, projectRoot],
+            args: [csvFileGlob, root],
             version: 'dev',
         },
     }

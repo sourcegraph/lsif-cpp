@@ -8,7 +8,7 @@ test('does not emit items with duplicate IDs', async () => {
 
     await index({
         csvFileGlob: 'tests/simple/*.csv',
-        projectRoot: '/Users/chrismwendt/github.com/mozilla/dxr/example',
+        root: '/Users/chrismwendt/github.com/mozilla/dxr/example',
         emit: item =>
             new Promise(resolve => {
                 output.push(item)
@@ -43,7 +43,7 @@ test('output', async () => {
 
     await index({
         csvFileGlob: 'tests/simple/*.csv',
-        projectRoot: '/Users/chrismwendt/github.com/mozilla/dxr/example',
+        root: '/Users/chrismwendt/github.com/mozilla/dxr/example',
         emit: item =>
             new Promise(resolve => {
                 output.push(JSON.stringify(item))

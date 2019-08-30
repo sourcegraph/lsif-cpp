@@ -12,7 +12,7 @@ main()
 async function main() {
     await index({
         csvFileGlob: '/Users/chrismwendt/github.com/mozilla/dxr/example/*.csv',
-        projectRoot: '/Users/chrismwendt/github.com/mozilla/dxr/example',
+        root: '/Users/chrismwendt/github.com/mozilla/dxr/example',
         emit: item =>
             new Promise(resolve => {
                 console.log(JSON.stringify(item))

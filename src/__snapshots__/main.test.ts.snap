@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`output 1`] = `
-"{\\"id\\":\\"meta\\",\\"type\\":\\"vertex\\",\\"label\\":\\"metaData\\",\\"projectRoot\\":\\"file:///Users/chrismwendt/github.com/mozilla/dxr/example\\",\\"version\\":\\"0.4.0\\",\\"positionEncoding\\":\\"utf-16\\",\\"toolInfo\\":{\\"name\\":\\"lsif-cpp\\",\\"args\\":[\\"tests/simple/*.csv\\",\\"/Users/chrismwendt/github.com/mozilla/dxr/example\\"],\\"version\\":\\"dev\\"}}
+"{\\"id\\":\\"meta\\",\\"type\\":\\"vertex\\",\\"label\\":\\"metaData\\",\\"projectRoot\\":\\"file:///\\",\\"version\\":\\"0.4.0\\",\\"positionEncoding\\":\\"utf-16\\",\\"toolInfo\\":{\\"name\\":\\"lsif-cpp\\",\\"args\\":[\\"tests/simple/*.csv\\",\\"/Users/chrismwendt/github.com/mozilla/dxr/example\\"],\\"version\\":\\"dev\\"}}
 {\\"id\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"project\\",\\"kind\\":\\"cpp\\"}
 {\\"id\\":\\"projectBegin\\",\\"data\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"project\\"}
-{\\"id\\":\\"document:main.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///Users/chrismwendt/github.com/mozilla/dxr/example/main.cpp\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"I2luY2x1ZGUgImZpdmUuaCIKCiNkZWZpbmUgVEFCTEVfU0laRSAxMDAKCmludCB4ID0gVEFCTEVfU0laRTsKCmludCBmb3VyKGludCB5KSB7CiAgcmV0dXJuIHk7Cn0KCmludCBtYWluKCkgewogIGZpdmUoeCk7CiAgZm91cih4KTsKICBmaXZlKHNpeCk7Cn0K\\"}
+{\\"id\\":\\"document:main.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///main.cpp\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"I2luY2x1ZGUgImZpdmUuaCIKCiNkZWZpbmUgVEFCTEVfU0laRSAxMDAKCmludCB4ID0gVEFCTEVfU0laRTsKCmludCBmb3VyKGludCB5KSB7CiAgcmV0dXJuIHk7Cn0KCmludCBtYWluKCkgewogIGZpdmUoeCk7CiAgZm91cih4KTsKICBmaXZlKHNpeCk7Cn0K\\"}
 {\\"id\\":\\"documentBegin:main.cpp\\",\\"data\\":\\"document:main.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"document\\"}
-{\\"id\\":\\"document:five.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///Users/chrismwendt/github.com/mozilla/dxr/example/five.h\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"aW50IHNpeDsKaW50IGZpdmUoaW50IHgpOw==\\"}
+{\\"id\\":\\"document:five.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///five.h\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"aW50IHNpeDsKaW50IGZpdmUoaW50IHgpOw==\\"}
 {\\"id\\":\\"documentBegin:five.h\\",\\"data\\":\\"document:five.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"document\\"}
-{\\"id\\":\\"document:five.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///Users/chrismwendt/github.com/mozilla/dxr/example/five.cpp\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"I2luY2x1ZGUgImZpdmUuaCIKCmludCBmaXZlKGludCB4KSB7CiAgcmV0dXJuIDU7Cn0=\\"}
+{\\"id\\":\\"document:five.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///five.cpp\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"I2luY2x1ZGUgImZpdmUuaCIKCmludCBmaXZlKGludCB4KSB7CiAgcmV0dXJuIDU7Cn0=\\"}
 {\\"id\\":\\"documentBegin:five.cpp\\",\\"data\\":\\"document:five.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"document\\"}
 {\\"id\\":\\"main.cpp:2:8\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":2,\\"character\\":8},\\"end\\":{\\"line\\":2,\\"character\\":8}}
 {\\"id\\":\\"main.cpp:4:8\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":4,\\"character\\":8},\\"end\\":{\\"line\\":4,\\"character\\":18}}
