@@ -1,6 +1,7 @@
 import * as readline from 'readline'
 import * as fs from 'fs'
 import * as util from 'util'
+import * as path from 'path'
 import { VError } from 'verror'
 import {
     fromPairs,
@@ -422,9 +423,9 @@ async function emitDocsBegin({
         id: 'document:' + doc,
         type: ElementTypes.vertex,
         label: VertexLabels.document,
-        uri: 'file://' + projectRoot + '/' + doc,
+        uri: 'file://' + path.join(projectRoot, doc),
         languageId: 'cpp',
-        contents: fs.readFileSync(projectRoot + '/' + doc).toString('base64'),
+        contents: fs.readFileSync(path.join(projectRoot, doc)).toString('base64'),
     })
     await emit<DocumentEvent>({
         id: 'documentBegin:' + doc,
