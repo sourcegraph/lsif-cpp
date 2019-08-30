@@ -1,0 +1,3 @@
+include,source_path,"five.cpp",target_path,"five.h",loc,"five.cpp:1:9",locend,"five.cpp:1:17"
+function,name,"five",qualname,"five(int)",type,"int",args,"(int)",loc,"five.cpp:3:4",locend,"five.cpp:3:8"
+variable,name,"x",qualname,"five(int)::x",loc,"five.cpp:3:13",locend,"five.cpp:3:14",type,"int",scopename,"five",scopequalname,"five(int)"

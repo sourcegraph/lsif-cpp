@@ -1,6 +1,7 @@
 import { index } from './index'
 import { Edge, Vertex } from 'lsif-protocol'
 import _ from 'lodash'
+import * as path from 'path'
 
 test('does not emit items with duplicate IDs', async () => {
     const output: (Edge | Vertex)[] = []
@@ -35,4 +36,20 @@ test('does not emit items with duplicate IDs', async () => {
             )
         )
     }
+})
+
+test('output', async () => {
+    const output: string[] = []
+
+    await index({
+        csvFileGlob: 'tests/simple/*.csv',
+        projectRoot: '/Users/chrismwendt/github.com/mozilla/dxr/example',
+        emit: item =>
+            new Promise(resolve => {
+                output.push(JSON.stringify(item))
+                resolve()
+            }),
+    })
+
+    expect(output.join('\n')).toMatchSnapshot()
 })
