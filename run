@@ -2,4 +2,6 @@
 
 set -ex
 
-node -r source-map-support/register out/main.js
+./build
+
+node -r source-map-support/register out/main.js > data.lsif
