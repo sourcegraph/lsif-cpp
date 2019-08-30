@@ -7,8 +7,8 @@ test('does not emit items with duplicate IDs', async () => {
     const output: (Edge | Vertex)[] = []
 
     await index({
-        csvFileGlob: 'tests/simple/*.csv',
-        root: '/Users/chrismwendt/github.com/mozilla/dxr/example',
+        csvFileGlob: 'examples/five/output/*.csv',
+        root: 'examples/five/root',
         emit: item =>
             new Promise(resolve => {
                 output.push(item)
@@ -42,8 +42,8 @@ test('output', async () => {
     const output: string[] = []
 
     await index({
-        csvFileGlob: 'tests/simple/*.csv',
-        root: '/Users/chrismwendt/github.com/mozilla/dxr/example',
+        csvFileGlob: 'examples/five/output/*.csv',
+        root: 'examples/five/root',
         emit: item =>
             new Promise(resolve => {
                 output.push(JSON.stringify(item))

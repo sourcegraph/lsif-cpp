@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`output 1`] = `
-"{\\"id\\":\\"meta\\",\\"type\\":\\"vertex\\",\\"label\\":\\"metaData\\",\\"projectRoot\\":\\"file:///\\",\\"version\\":\\"0.4.0\\",\\"positionEncoding\\":\\"utf-16\\",\\"toolInfo\\":{\\"name\\":\\"lsif-cpp\\",\\"args\\":[\\"tests/simple/*.csv\\",\\"/Users/chrismwendt/github.com/mozilla/dxr/example\\"],\\"version\\":\\"dev\\"}}
+"{\\"id\\":\\"meta\\",\\"type\\":\\"vertex\\",\\"label\\":\\"metaData\\",\\"projectRoot\\":\\"file:///\\",\\"version\\":\\"0.4.0\\",\\"positionEncoding\\":\\"utf-16\\",\\"toolInfo\\":{\\"name\\":\\"lsif-cpp\\",\\"args\\":[\\"examples/five/output/*.csv\\",\\"examples/five/root\\"],\\"version\\":\\"dev\\"}}
 {\\"id\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"project\\",\\"kind\\":\\"cpp\\"}
 {\\"id\\":\\"projectBegin\\",\\"data\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"project\\"}
 {\\"id\\":\\"document:main.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///main.cpp\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"I2luY2x1ZGUgImZpdmUuaCIKCiNkZWZpbmUgVEFCTEVfU0laRSAxMDAKCmludCB4ID0gVEFCTEVfU0laRTsKCmludCBmb3VyKGludCB5KSB7CiAgcmV0dXJuIHk7Cn0KCmludCBtYWluKCkgewogIGZpdmUoeCk7CiAgZm91cih4KTsKICBmaXZlKHNpeCk7Cn0K\\"}

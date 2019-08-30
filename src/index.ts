@@ -119,7 +119,11 @@ export async function index({
     }
 
     const dp = mkDispatch(link)
-    for (const csvFile of glob.sync(csvFileGlob)) {
+    const csvFiles = glob.sync(csvFileGlob)
+    if (csvFiles.length === 0) {
+        throw new Error(`glob ${csvFileGlob} did not match any files`)
+    }
+    for (const csvFile of csvFiles) {
         await scanCsvFile({ csvFile, cb: dp })
     }
 
