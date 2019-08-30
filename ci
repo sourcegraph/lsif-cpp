@@ -4,4 +4,5 @@ set -ex
 
 yarn -s --frozen-lockfile
 yarn run prettier '**/*.{json,ts,md}' --list-different
-yarn run tsc --project tsconfig.json --noEmit
+./build
+yarn run jest
