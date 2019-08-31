@@ -4,9 +4,9 @@ import _ from 'lodash'
 import * as path from 'path'
 import * as cp from 'child_process'
 
-async function generateAndIndex(example: string): Promise<(Edge | Vertex)[]> {
-    const output: (Edge | Vertex)[] = []
+const GENERATE = false
 
+function generate(example: string): void {
     cp.execFileSync('./generate-csv', ['$CXX -c *.cpp'], {
         env: {
             ABSROOTDIR: path.resolve(`examples/${example}/root`),
@@ -14,6 +14,14 @@ async function generateAndIndex(example: string): Promise<(Edge | Vertex)[]> {
             CLEAN: 'true',
         },
     })
+}
+
+async function indexExample(example: string): Promise<(Edge | Vertex)[]> {
+    if (GENERATE) {
+        generate(example)
+    }
+
+    const output: (Edge | Vertex)[] = []
 
     await index({
         csvFileGlob: `examples/${example}/output/*.csv`,
@@ -29,7 +37,7 @@ async function generateAndIndex(example: string): Promise<(Edge | Vertex)[]> {
 }
 
 test('does not emit items with duplicate IDs', async () => {
-    const output = await generateAndIndex('five')
+    const output = await indexExample('five')
 
     const setsOfDupes = _(output)
         .groupBy(item => item.id)
