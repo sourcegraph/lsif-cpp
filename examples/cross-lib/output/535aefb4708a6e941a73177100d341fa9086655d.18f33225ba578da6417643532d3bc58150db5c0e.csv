@@ -1,0 +1,4 @@
+include,source_path,"lib.cpp",target_path,"lib.h",loc,"lib.cpp:1:9",locend,"lib.cpp:1:16"
+function,name,"uppercase",qualname,"uppercase(char *)",type,"char *",args,"(char *)",loc,"lib.cpp:3:6",locend,"lib.cpp:3:15"
+variable,name,"str",qualname,"uppercase(char *)::str",loc,"lib.cpp:3:22",locend,"lib.cpp:3:25",type,"char *",scopename,"uppercase",scopequalname,"uppercase(char *)"
+ref,defloc,"lib.cpp:3:22",loc,"lib.cpp:5:11",locend,"lib.cpp:5:14",kind,"variable",name,"str",qualname,"uppercase(char *)::str"

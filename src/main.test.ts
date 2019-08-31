@@ -62,7 +62,13 @@ test('does not emit items with duplicate IDs', async () => {
 })
 
 test('output', async () => {
-    const output = (await generateAndIndex('five')).map(v => JSON.stringify(v))
+    const output = (await indexExample('five')).map(v => JSON.stringify(v))
 
     expect(output.join('\n')).toMatchSnapshot()
+})
+
+test('cross-repo', async () => {
+    // const lib = (await indexExample('cross-lib')).map(v => JSON.stringify(v))
+    const app = (await indexExample('cross-app')).map(v => JSON.stringify(v))
+    // console.log(app.join('\n'))
 })
