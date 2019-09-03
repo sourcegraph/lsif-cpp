@@ -1,0 +1,5 @@
+include,source_path,"app.cpp",target_path,"lib.h",loc,"app.cpp:1:9",locend,"app.cpp:1:16"
+warning,msg,"conversion from string literal to 'char *' is deprecated",opt,"-Wc++11-compat-deprecated-writable-strings",loc,"app.cpp:6:14",locend,"app.cpp:6:21"
+function,name,"main",qualname,"main()",type,"int",args,"()",loc,"app.cpp:3:4",locend,"app.cpp:3:8"
+call,callloc,"app.cpp:6:4",calllocend,"app.cpp:6:21",calleeloc,"lib.h:1:6",name,"uppercase",qualname,"uppercase(char *)",calltype,"static"
+ref,defloc,"lib.h:1:6",loc,"app.cpp:6:4",locend,"app.cpp:6:13",kind,"function",name,"uppercase",qualname,"uppercase(char *)"

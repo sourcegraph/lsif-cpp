@@ -1,6 +1,7 @@
 #include "lib.h"
-#include <stdio.h>
 
 int main() {
-    printf("hello, %s\n", uppercase("world"));
+    // TODO support printf (no defloc on the ref)
+    // printf("hello, %s\n", uppercase("world"));
+    uppercase("world");
 }
