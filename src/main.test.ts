@@ -68,7 +68,8 @@ test('output', async () => {
 })
 
 test('cross-repo', async () => {
-    // const lib = (await indexExample('cross-lib')).map(v => JSON.stringify(v))
+    const lib = (await indexExample('cross-lib')).map(v => JSON.stringify(v))
     const app = (await indexExample('cross-app')).map(v => JSON.stringify(v))
+    expect(lib.join('\n')).toMatchSnapshot()
     expect(app.join('\n')).toMatchSnapshot()
 })

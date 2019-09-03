@@ -1,6 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`cross-repo 1`] = `
+"{\\"id\\":\\"meta\\",\\"type\\":\\"vertex\\",\\"label\\":\\"metaData\\",\\"projectRoot\\":\\"file:///\\",\\"version\\":\\"0.4.0\\",\\"positionEncoding\\":\\"utf-16\\",\\"toolInfo\\":{\\"name\\":\\"lsif-cpp\\",\\"args\\":[\\"examples/cross-lib/output/*.csv\\",\\"examples/cross-lib/root\\"],\\"version\\":\\"dev\\"}}
+{\\"id\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"project\\",\\"kind\\":\\"cpp\\"}
+{\\"id\\":\\"projectBegin\\",\\"data\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"project\\"}
+{\\"id\\":\\"document:lib.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///lib.cpp\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"I2luY2x1ZGUgImxpYi5oIgoKY2hhciAqdXBwZXJjYXNlKGNoYXIgKnN0cikgewogICAgLy8gbm9vcAogICAgcmV0dXJuIHN0cjsKfQo=\\"}
+{\\"id\\":\\"documentBegin:lib.cpp\\",\\"data\\":\\"document:lib.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"document\\"}
+{\\"id\\":\\"document:lib.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///lib.h\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"Y2hhciAqdXBwZXJjYXNlKGNoYXIgKnN0cik7Cg==\\"}
+{\\"id\\":\\"documentBegin:lib.h\\",\\"data\\":\\"document:lib.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"document\\"}
+{\\"id\\":\\"lib.cpp:2:22\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":2,\\"character\\":22},\\"end\\":{\\"line\\":2,\\"character\\":22}}
+{\\"id\\":\\"lib.cpp:4:11\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":4,\\"character\\":11},\\"end\\":{\\"line\\":4,\\"character\\":14}}
+{\\"id\\":\\"lib.cpp:2:6\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":2,\\"character\\":6},\\"end\\":{\\"line\\":2,\\"character\\":6}}
+{\\"id\\":\\"lib.h:0:6\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":0,\\"character\\":6},\\"end\\":{\\"line\\":0,\\"character\\":15}}
+{\\"id\\":\\"resultSet:lib.cpp:2:22\\",\\"label\\":\\"resultSet\\",\\"type\\":\\"vertex\\"}
+{\\"id\\":\\"next:lib.cpp:2:22\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.cpp:2:22\\",\\"inV\\":\\"resultSet:lib.cpp:2:22\\"}
+{\\"id\\":\\"definition:lib.cpp:2:22\\",\\"label\\":\\"definitionResult\\",\\"type\\":\\"vertex\\"}
+{\\"id\\":\\"textDocument/definition:lib.cpp:2:22\\",\\"type\\":\\"edge\\",\\"label\\":\\"textDocument/definition\\",\\"outV\\":\\"resultSet:lib.cpp:2:22\\",\\"inV\\":\\"definition:lib.cpp:2:22\\"}
+{\\"id\\":\\"item:textDocument/definition:lib.cpp:2:22\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"definition:lib.cpp:2:22\\",\\"inVs\\":[\\"lib.cpp:2:22\\"],\\"document\\":\\"document:lib.cpp\\"}
+{\\"id\\":\\"reference:lib.cpp:2:22\\",\\"label\\":\\"referenceResult\\",\\"type\\":\\"vertex\\"}
+{\\"id\\":\\"textDocument/references:lib.cpp:2:22\\",\\"type\\":\\"edge\\",\\"label\\":\\"textDocument/references\\",\\"outV\\":\\"resultSet:lib.cpp:2:22\\",\\"inV\\":\\"reference:lib.cpp:2:22\\"}
+{\\"id\\":\\"item:textDocument/references:definitions:lib.cpp:2:22\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.cpp:2:22\\",\\"inVs\\":[\\"lib.cpp:2:22\\"],\\"property\\":\\"definitions\\",\\"document\\":\\"document:lib.cpp\\"}
+{\\"id\\":\\"next:lib.cpp:4:11\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.cpp:4:11\\",\\"inV\\":\\"resultSet:lib.cpp:2:22\\"}
+{\\"id\\":\\"item:textDocument/references:references:lib.cpp:2:22:lib.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.cpp:2:22\\",\\"inVs\\":[\\"lib.cpp:4:11\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:lib.cpp\\"}
+{\\"id\\":\\"resultSet:lib.cpp:2:6\\",\\"label\\":\\"resultSet\\",\\"type\\":\\"vertex\\"}
+{\\"id\\":\\"next:lib.cpp:2:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.cpp:2:6\\",\\"inV\\":\\"resultSet:lib.cpp:2:6\\"}
+{\\"id\\":\\"definition:lib.cpp:2:6\\",\\"label\\":\\"definitionResult\\",\\"type\\":\\"vertex\\"}
+{\\"id\\":\\"textDocument/definition:lib.cpp:2:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"textDocument/definition\\",\\"outV\\":\\"resultSet:lib.cpp:2:6\\",\\"inV\\":\\"definition:lib.cpp:2:6\\"}
+{\\"id\\":\\"item:textDocument/definition:lib.cpp:2:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"definition:lib.cpp:2:6\\",\\"inVs\\":[\\"lib.cpp:2:6\\"],\\"document\\":\\"document:lib.cpp\\"}
+{\\"id\\":\\"reference:lib.cpp:2:6\\",\\"label\\":\\"referenceResult\\",\\"type\\":\\"vertex\\"}
+{\\"id\\":\\"textDocument/references:lib.cpp:2:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"textDocument/references\\",\\"outV\\":\\"resultSet:lib.cpp:2:6\\",\\"inV\\":\\"reference:lib.cpp:2:6\\"}
+{\\"id\\":\\"item:textDocument/references:definitions:lib.cpp:2:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.cpp:2:6\\",\\"inVs\\":[\\"lib.cpp:2:6\\"],\\"property\\":\\"definitions\\",\\"document\\":\\"document:lib.cpp\\"}
+{\\"id\\":\\"next:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.h:0:6\\",\\"inV\\":\\"resultSet:lib.cpp:2:6\\"}
+{\\"id\\":\\"item:textDocument/references:references:lib.cpp:2:6:lib.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.cpp:2:6\\",\\"inVs\\":[\\"lib.h:0:6\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:lib.h\\"}
+{\\"id\\":\\"contains:lib.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:lib.cpp\\",\\"inVs\\":[\\"lib.cpp:2:22\\",\\"lib.cpp:4:11\\",\\"lib.cpp:2:6\\"]}
+{\\"id\\":\\"documentEnd:lib.cpp\\",\\"data\\":\\"document:lib.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"document\\"}
+{\\"id\\":\\"contains:lib.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:lib.h\\",\\"inVs\\":[\\"lib.h:0:6\\"]}
+{\\"id\\":\\"documentEnd:lib.h\\",\\"data\\":\\"document:lib.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"document\\"}
+{\\"id\\":\\"projectContains\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"project\\",\\"inVs\\":[\\"document:lib.cpp\\",\\"document:lib.h\\"]}
+{\\"id\\":\\"projectEnd\\",\\"data\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"project\\"}"
+`;
+
+exports[`cross-repo 2`] = `
 "{\\"id\\":\\"meta\\",\\"type\\":\\"vertex\\",\\"label\\":\\"metaData\\",\\"projectRoot\\":\\"file:///\\",\\"version\\":\\"0.4.0\\",\\"positionEncoding\\":\\"utf-16\\",\\"toolInfo\\":{\\"name\\":\\"lsif-cpp\\",\\"args\\":[\\"examples/cross-app/output/*.csv\\",\\"examples/cross-app/root\\"],\\"version\\":\\"dev\\"}}
 {\\"id\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"project\\",\\"kind\\":\\"cpp\\"}
 {\\"id\\":\\"projectBegin\\",\\"data\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"project\\"}
