@@ -219,6 +219,7 @@ function mkDispatch(link: Link): (entry: GenericEntry) => void {
     > = {
         ref: entry => {
             const location = parseLocation(entry.value.loc, entry.value.locend)
+            // sometimes no defloc (e.g. printf)
             const defloc = parseFilePosition(entry.value.defloc)
             link({
                 def: {
