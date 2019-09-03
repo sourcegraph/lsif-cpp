@@ -502,15 +502,7 @@ function forEachLine({
             try {
                 onLine(line)
             } catch (e) {
-                reject(
-                    new VError(
-                        {
-                            cause: e,
-                            info: { line, lineNumber, filePath },
-                        },
-                        'while reading a line'
-                    )
-                )
+                reject(e)
             }
             lineNumber++
         })
