@@ -12,8 +12,8 @@ exports[`cross-app 1`] = `
 {\\"id\\":\\"app.cpp:5:4\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":5,\\"character\\":4},\\"end\\":{\\"line\\":5,\\"character\\":13}}
 {\\"id\\":\\"resultSet:lib.h:0:6\\",\\"label\\":\\"resultSet\\",\\"type\\":\\"vertex\\"}
 {\\"id\\":\\"next:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.h:0:6\\",\\"inV\\":\\"resultSet:lib.h:0:6\\"}
-{\\"id\\":\\"moniker:lib.h:0:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"uppercase(char *)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
-{\\"id\\":\\"moniker:lib.h:0:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:lib.h:0:6\\",\\"outV\\":\\"resultSet:lib.h:0:6\\"}
+{\\"id\\":\\"moniker:import:lib.h:0:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"uppercase(char *)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
+{\\"id\\":\\"monikerEdge:import:lib.h:0:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:import:lib.h:0:6\\",\\"outV\\":\\"resultSet:lib.h:0:6\\"}
 {\\"id\\":\\"contains:lib.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:lib.h\\",\\"inVs\\":[\\"lib.h:0:6\\"]}
 {\\"id\\":\\"documentEnd:lib.h\\",\\"data\\":\\"document:lib.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"document\\"}
 {\\"id\\":\\"contains:app.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:app.cpp\\",\\"inVs\\":[\\"app.cpp:5:4\\"]}
@@ -54,6 +54,8 @@ exports[`cross-lib 1`] = `
 {\\"id\\":\\"item:textDocument/references:definitions:lib.cpp:2:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.cpp:2:6\\",\\"inVs\\":[\\"lib.cpp:2:6\\"],\\"property\\":\\"definitions\\",\\"document\\":\\"document:lib.cpp\\"}
 {\\"id\\":\\"next:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.h:0:6\\",\\"inV\\":\\"resultSet:lib.cpp:2:6\\"}
 {\\"id\\":\\"item:textDocument/references:references:lib.cpp:2:6:lib.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.cpp:2:6\\",\\"inVs\\":[\\"lib.h:0:6\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:lib.h\\"}
+{\\"id\\":\\"moniker:export:lib.cpp:2:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"uppercase(char *)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
+{\\"id\\":\\"monikerEdge:export:lib.cpp:2:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:export:lib.cpp:2:6\\",\\"outV\\":\\"resultSet:lib.cpp:2:6\\"}
 {\\"id\\":\\"contains:lib.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:lib.cpp\\",\\"inVs\\":[\\"lib.cpp:2:22\\",\\"lib.cpp:4:11\\",\\"lib.cpp:2:6\\"]}
 {\\"id\\":\\"documentEnd:lib.cpp\\",\\"data\\":\\"document:lib.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"document\\"}
 {\\"id\\":\\"contains:lib.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:lib.h\\",\\"inVs\\":[\\"lib.h:0:6\\"]}
@@ -151,6 +153,8 @@ exports[`five 1`] = `
 {\\"id\\":\\"next:main.cpp:13:2\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"main.cpp:13:2\\",\\"inV\\":\\"resultSet:five.cpp:2:4\\"}
 {\\"id\\":\\"item:textDocument/references:references:five.cpp:2:4:five.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:five.cpp:2:4\\",\\"inVs\\":[\\"five.h:1:4\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:five.h\\"}
 {\\"id\\":\\"item:textDocument/references:references:five.cpp:2:4:main.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:five.cpp:2:4\\",\\"inVs\\":[\\"main.cpp:11:2\\",\\"main.cpp:13:2\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:main.cpp\\"}
+{\\"id\\":\\"moniker:export:five.cpp:2:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"five(int)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
+{\\"id\\":\\"monikerEdge:export:five.cpp:2:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:export:five.cpp:2:4\\",\\"outV\\":\\"resultSet:five.cpp:2:4\\"}
 {\\"id\\":\\"contains:main.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:main.cpp\\",\\"inVs\\":[\\"main.cpp:2:8\\",\\"main.cpp:4:8\\",\\"main.cpp:6:13\\",\\"main.cpp:7:9\\",\\"main.cpp:11:2\\",\\"main.cpp:4:4\\",\\"main.cpp:11:7\\",\\"main.cpp:6:4\\",\\"main.cpp:12:2\\",\\"main.cpp:12:7\\",\\"main.cpp:13:2\\",\\"main.cpp:13:7\\"]}
 {\\"id\\":\\"documentEnd:main.cpp\\",\\"data\\":\\"document:main.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"document\\"}
 {\\"id\\":\\"contains:five.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:five.h\\",\\"inVs\\":[\\"five.h:1:4\\",\\"five.h:0:4\\"]}

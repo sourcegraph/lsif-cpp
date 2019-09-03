@@ -79,7 +79,8 @@ export async function index({
     const rangesByDoc = new Map<string, Set<string>>()
     const refsByDef = new Map<string, Set<string>>()
     const locByRange = new Map<string, lsp.Location>()
-    const monikerByRange = new Map<string, string>()
+    const importMonikerByRange = new Map<string, string>()
+    const exportMonikerByRange = new Map<string, string>()
 
     function onDoc(doc: string): void {
         if (!docs.has(doc)) {
@@ -124,11 +125,22 @@ export async function index({
     function recordMoniker({
         moniker,
         range,
+        kind,
     }: {
         moniker: string
         range: string
+        kind: MonikerKind
     }): void {
-        monikerByRange.set(range, moniker)
+        switch (kind) {
+            case MonikerKind.import:
+                importMonikerByRange.set(range, moniker)
+                break
+            case MonikerKind.export:
+                exportMonikerByRange.set(range, moniker)
+                break
+            default:
+                console.log('unimplemented kind', kind)
+        }
     }
 
     const dp = mkDispatch({ link, recordMoniker })
@@ -158,7 +170,13 @@ export async function index({
 
     followTransitiveDefsDepth1(refsByDef)
 
-    await emitDefsRefs({ refsByDef, locByRange, emit, monikerByRange })
+    await emitDefsRefs({
+        refsByDef,
+        locByRange,
+        emit,
+        importMonikerByRange,
+        exportMonikerByRange,
+    })
 
     await emitDocsEnd({ docs, rangesByDoc, emit })
 
@@ -186,7 +204,11 @@ type GenericEntry = { kind: string; value: Dictionary<string> }
 
 type Link = (info: { def: lsp.Location; ref: lsp.Location }) => void
 
-type RecordMoniker = (arg: { moniker: string; range: string }) => void
+type RecordMoniker = (arg: {
+    moniker: string
+    range: string
+    kind: MonikerKind
+}) => void
 
 async function scanCsvFile({
     csvFile,
@@ -258,17 +280,24 @@ function mkDispatch({
                 recordMoniker({
                     moniker: entry.value.qualname,
                     range: stringifyLocation(location),
+                    kind: MonikerKind.import,
                 })
                 return
             }
             const defloc = parseFilePosition(entry.value.defloc)
+            const defLocation = {
+                uri: defloc.uri,
+                // Using the same position for start/end is wrong
+                // Need to fill in the right `end` when we scan an entry with the same `start`
+                range: { start: defloc.position, end: defloc.position },
+            }
+            recordMoniker({
+                moniker: entry.value.qualname,
+                range: stringifyLocation(defLocation),
+                kind: MonikerKind.export,
+            })
             link({
-                def: {
-                    uri: defloc.uri,
-                    // Using the same position for start/end is wrong
-                    // Need to fill in the right `end` when we scan an entry with the same `start`
-                    range: { start: defloc.position, end: defloc.position },
-                },
+                def: defLocation,
                 ref: location,
             })
         },
@@ -300,12 +329,14 @@ async function emitDefsRefs({
     refsByDef,
     locByRange,
     emit,
-    monikerByRange,
+    importMonikerByRange,
+    exportMonikerByRange,
 }: {
     refsByDef: Map<string, Set<string>>
     locByRange: Map<string, lsp.Location>
     emit: Emit
-    monikerByRange: Map<string, string>
+    importMonikerByRange: Map<string, string>
+    exportMonikerByRange: Map<string, string>
 }): Promise<void> {
     for (const [def, refs] of Array.from(refsByDef.entries())) {
         const defLoc = locByRange.get(def)
@@ -313,8 +344,12 @@ async function emitDefsRefs({
             throw new Error('Unable to look up def')
         }
 
-        // (2.2*moniker:$id) <---2.1*moniker:$def---     ------------------------------------------------------------------
-        //                                           \ /                                                                    \
+        // (11*moniker:export:$id) <---12*monikerEdge:export:$def
+        //                                            \
+        //                                            |
+        // (2.2*moniker:import:$id) <---2.1*monikerEdge:import:$def
+        //                                          \ |  ------------------------------------------------------------------
+        //                                           \|/                                                                    \
         // ($def) ---2*next:$def---> 1*(resultSet:$def) ---7*textDocument/references:$def---> 6*(reference:$def) -------     \
         //  | |                                        \---4*textDocument/definition:$def---> 3*(definition:$def)   \    \    |
         //   \ \                                                                             /                       |    |   |
@@ -341,23 +376,23 @@ async function emitDefsRefs({
             inV: 'resultSet:' + def,
         })
 
-        const moniker = monikerByRange.get(def)
-        if (moniker) {
+        const importMoniker = importMonikerByRange.get(def)
+        if (importMoniker) {
             // 2.1
             await emit<Moniker>({
-                id: 'moniker:' + def,
+                id: 'moniker:import:' + def,
                 label: VertexLabels.moniker,
                 type: ElementTypes.vertex,
-                identifier: moniker,
+                identifier: importMoniker,
                 kind: MonikerKind.import,
                 scheme: 'cpp',
             })
             // 2.2
             await emit<moniker>({
-                id: 'moniker:' + def,
+                id: 'monikerEdge:import:' + def,
                 label: EdgeLabels.moniker,
                 type: ElementTypes.edge,
-                inV: 'moniker:' + def,
+                inV: 'moniker:import:' + def,
                 outV: 'resultSet:' + def,
             })
             return
@@ -405,7 +440,7 @@ async function emitDefsRefs({
             inV: 'reference:' + def,
         })
 
-        if (!moniker) {
+        if (!importMoniker) {
             // 8
             await emit<item>({
                 id: 'item:textDocument/references:definitions:' + def,
@@ -445,6 +480,27 @@ async function emitDefsRefs({
                 inVs: Array.from(refsForCurrentUri),
                 property: ItemEdgeProperties.references,
                 document: 'document:' + uri,
+            })
+        }
+
+        const exportMoniker = exportMonikerByRange.get(def)
+        if (exportMoniker) {
+            // 11
+            await emit<Moniker>({
+                id: 'moniker:export:' + def,
+                label: VertexLabels.moniker,
+                type: ElementTypes.vertex,
+                identifier: exportMoniker,
+                kind: MonikerKind.import,
+                scheme: 'cpp',
+            })
+            // 12
+            await emit<moniker>({
+                id: 'monikerEdge:export:' + def,
+                label: EdgeLabels.moniker,
+                type: ElementTypes.edge,
+                inV: 'moniker:export:' + def,
+                outV: 'resultSet:' + def,
             })
         }
     }
