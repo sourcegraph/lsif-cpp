@@ -45,6 +45,8 @@ import {
     item,
     textDocument_references,
     ItemEdgeProperties,
+    MonikerKind,
+    moniker,
 } from 'lsif-protocol'
 import * as lsp from 'vscode-languageserver-protocol'
 import * as P from 'parsimmon'
@@ -77,6 +79,7 @@ export async function index({
     const rangesByDoc = new Map<string, Set<string>>()
     const refsByDef = new Map<string, Set<string>>()
     const locByRange = new Map<string, lsp.Location>()
+    const monikerByRange = new Map<string, string>()
 
     function onDoc(doc: string): void {
         if (!docs.has(doc)) {
@@ -118,7 +121,17 @@ export async function index({
         refs.add(stringifyLocation(ref))
     }
 
-    const dp = mkDispatch(link)
+    function recordMoniker({
+        moniker,
+        range,
+    }: {
+        moniker: string
+        range: string
+    }): void {
+        monikerByRange.set(range, moniker)
+    }
+
+    const dp = mkDispatch({ link, recordMoniker })
     const csvFiles = glob.sync(csvFileGlob)
     if (csvFiles.length === 0) {
         throw new Error(`glob ${csvFileGlob} did not match any files`)
@@ -145,7 +158,7 @@ export async function index({
 
     followTransitiveDefsDepth1(refsByDef)
 
-    await emitDefsRefs({ refsByDef, locByRange, emit })
+    await emitDefsRefs({ refsByDef, locByRange, emit, monikerByRange })
 
     await emitDocsEnd({ docs, rangesByDoc, emit })
 
@@ -172,6 +185,8 @@ interface FilePosition {
 type GenericEntry = { kind: string; value: Dictionary<string> }
 
 type Link = (info: { def: lsp.Location; ref: lsp.Location }) => void
+
+type RecordMoniker = (arg: { moniker: string; range: string }) => void
 
 async function scanCsvFile({
     csvFile,
@@ -212,7 +227,13 @@ function followTransitiveDefsDepth1(refsByDef: Map<string, Set<string>>): void {
 //
 // So there's a foreign key constraint between ref.defloc and decldef.loc
 
-function mkDispatch(link: Link): (entry: GenericEntry) => void {
+function mkDispatch({
+    link,
+    recordMoniker,
+}: {
+    link: Link
+    recordMoniker: RecordMoniker
+}): (entry: GenericEntry) => void {
     const dispatchByKind: Record<
         'ref' | 'decldef',
         (entry: GenericEntry) => void
@@ -232,10 +253,14 @@ function mkDispatch(link: Link): (entry: GenericEntry) => void {
             })
         },
         decldef: entry => {
+            const location = parseLocation(entry.value.loc, entry.value.locend)
             if (!entry.value.defloc) {
+                recordMoniker({
+                    moniker: entry.value.qualname,
+                    range: stringifyLocation(location),
+                })
                 return
             }
-            const location = parseLocation(entry.value.loc, entry.value.locend)
             const defloc = parseFilePosition(entry.value.defloc)
             link({
                 def: {
@@ -275,10 +300,12 @@ async function emitDefsRefs({
     refsByDef,
     locByRange,
     emit,
+    monikerByRange,
 }: {
     refsByDef: Map<string, Set<string>>
     locByRange: Map<string, lsp.Location>
     emit: Emit
+    monikerByRange: Map<string, string>
 }): Promise<void> {
     for (const [def, refs] of Array.from(refsByDef.entries())) {
         const defLoc = locByRange.get(def)
@@ -286,12 +313,26 @@ async function emitDefsRefs({
             throw new Error('Unable to look up def')
         }
 
+        // (2.2*moniker:$id) <---2.1*moniker:$def---     ------------------------------------------------------------------
+        //                                           \ /                                                                    \
+        // ($def) ---2*next:$def---> 1*(resultSet:$def) ---7*textDocument/references:$def---> 6*(reference:$def) -------     \
+        //  | |                                        \---4*textDocument/definition:$def---> 3*(definition:$def)   \    \    |
+        //   \ \                                                                             /                       |    |   |
+        //    \  ---<---5*item:textDocument/definition:$def---------------------------------                        /     |   |
+        //      ----<---8*item:textDocument/references:definitions:$def--------------------------------------------      /    |
+        //          ----------------<---10*item:textDocument/references:references:$def:$*uri---------------------------     /
+        //        /-------/-------------------9*next:$*ref--->--------------------------------------------------------------
+        //       /       /
+        // ($ref1) ($ref2) ...
+
+        // 1
         await emit<ResultSet>({
             id: 'resultSet:' + def,
             label: VertexLabels.resultSet,
             type: ElementTypes.vertex,
         })
 
+        // 2
         await emit<next>({
             id: 'next:' + def,
             type: ElementTypes.edge,
@@ -300,35 +341,62 @@ async function emitDefsRefs({
             inV: 'resultSet:' + def,
         })
 
-        await emit<DefinitionResult>({
-            id: 'definition:' + def,
-            label: VertexLabels.definitionResult,
-            type: ElementTypes.vertex,
-        })
+        const moniker = monikerByRange.get(def)
+        if (moniker) {
+            // 2.1
+            await emit<Moniker>({
+                id: 'moniker:' + def,
+                label: VertexLabels.moniker,
+                type: ElementTypes.vertex,
+                identifier: moniker,
+                kind: MonikerKind.import,
+                scheme: 'cpp',
+            })
+            // 2.2
+            await emit<moniker>({
+                id: 'moniker:' + def,
+                label: EdgeLabels.moniker,
+                type: ElementTypes.edge,
+                inV: 'moniker:' + def,
+                outV: 'resultSet:' + def,
+            })
+            return
+        } else {
+            // 3
+            await emit<DefinitionResult>({
+                id: 'definition:' + def,
+                label: VertexLabels.definitionResult,
+                type: ElementTypes.vertex,
+            })
 
-        await emit<textDocument_definition>({
-            id: 'textDocument/definition:' + def,
-            type: ElementTypes.edge,
-            label: EdgeLabels.textDocument_definition,
-            outV: 'resultSet:' + def,
-            inV: 'definition:' + def,
-        })
+            // 4
+            await emit<textDocument_definition>({
+                id: 'textDocument/definition:' + def,
+                type: ElementTypes.edge,
+                label: EdgeLabels.textDocument_definition,
+                outV: 'resultSet:' + def,
+                inV: 'definition:' + def,
+            })
 
-        await emit<item>({
-            id: 'item:textDocument/definition:' + def,
-            type: ElementTypes.edge,
-            label: EdgeLabels.item,
-            outV: 'definition:' + def,
-            inVs: [def],
-            document: 'document:' + defLoc.uri,
-        })
+            // 5
+            await emit<item>({
+                id: 'item:textDocument/definition:' + def,
+                type: ElementTypes.edge,
+                label: EdgeLabels.item,
+                outV: 'definition:' + def,
+                inVs: [def],
+                document: 'document:' + defLoc.uri,
+            })
+        }
 
+        // 6
         await emit<ReferenceResult>({
             id: 'reference:' + def,
             label: VertexLabels.referenceResult,
             type: ElementTypes.vertex,
         })
 
+        // 7
         await emit<textDocument_references>({
             id: 'textDocument/references:' + def,
             type: ElementTypes.edge,
@@ -337,16 +405,20 @@ async function emitDefsRefs({
             inV: 'reference:' + def,
         })
 
-        await emit<item>({
-            id: 'item:textDocument/references:definitions:' + def,
-            type: ElementTypes.edge,
-            label: EdgeLabels.item,
-            outV: 'reference:' + def,
-            inVs: [def],
-            property: ItemEdgeProperties.definitions,
-            document: 'document:' + defLoc.uri,
-        })
+        if (!moniker) {
+            // 8
+            await emit<item>({
+                id: 'item:textDocument/references:definitions:' + def,
+                type: ElementTypes.edge,
+                label: EdgeLabels.item,
+                outV: 'reference:' + def,
+                inVs: [def],
+                property: ItemEdgeProperties.definitions,
+                document: 'document:' + defLoc.uri,
+            })
+        }
 
+        // 9
         for (const ref of Array.from(refs)) {
             await emit<next>({
                 id: 'next:' + ref,
@@ -357,6 +429,7 @@ async function emitDefsRefs({
             })
         }
 
+        // 10
         for (const [uri, refsForCurrentUri] of toPairs(
             groupBy(Array.from(refs), ref => parseFilePosition(ref).uri)
         )) {
