@@ -18,9 +18,7 @@ if [ -z "$1" ] || [ -z "$ABSOUTDIR" ] || [ -z "$ABSROOTDIR" ] || [ "$1" = "--hel
   echo "  env CLEAN=true ABSROOTDIR=\$PWD/examples/five/root ABSOUTDIR=\$PWD/examples/five/output ./generate-csv \"\\\$CXX -c /host/root/*.cpp ; ls /host/output\""
   echo
   echo "Prerequisites:"
-  echo "- https://github.com/mozilla/dxr is checked out at ../../mozilla/dxr"
-  echo "- A docker container named 'docker_dev' exists (built by DXR)"
-  echo "- dxr/plugins/clang/libclang-index-plugin.so exists in ../../mozilla/dxr (built by running make inside dxr/plugins/clang)"
+  echo "- A docker container named 'clang' exists (built by ./clang/build)"
   exit 1
 fi
 
@@ -31,8 +29,9 @@ fi
 
 cmd="$1"
 
-export CXX="clang++ -Xclang -load -Xclang /home/dxr/dxr/dxr/plugins/clang/libclang-index-plugin.so -Xclang -add-plugin -Xclang dxr-index -Xclang -plugin-arg-dxr-index -Xclang /host/root"
-export CC="clang -Xclang -load -Xclang /home/dxr/dxr/dxr/plugins/clang/libclang-index-plugin.so -Xclang -add-plugin -Xclang dxr-index -Xclang -plugin-arg-dxr-index -Xclang /host/root"
+FLAGS="-Xclang -load -Xclang /clang/libclang-index-plugin.so -Xclang -add-plugin -Xclang dxr-index -Xclang -plugin-arg-dxr-index -Xclang /host/root"
+export CXX="clang++ $FLAGS"
+export CC="clang $FLAGS"
 echo "Running... $cmd"
 
 docker run \
@@ -43,8 +42,7 @@ docker run \
   -v "$ABSOUTDIR":/host/output \
   -v "$ABSROOTDIR":/host/root \
   -w /host/root \
-  -v "$PWD"/../../mozilla/dxr:/home/dxr/dxr:Z \
-  docker_dev \
+  clang \
   bash -c "$cmd"
 
 echo
