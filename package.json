@@ -23,6 +23,7 @@
     "lsif-protocol": "^0.4.3",
     "parsimmon": "^1.13.0",
     "verror": "^1.10.0",
-    "vscode-languageserver-protocol": "^3.14.1"
+    "vscode-languageserver-protocol": "^3.14.1",
+    "yargs": "^14.0.0"
   }
 }

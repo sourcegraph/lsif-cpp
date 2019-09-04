@@ -1,4 +1,6 @@
 import { index } from './index'
+import * as yargs from 'yargs'
+import * as fs from 'fs'
 
 // Causes node to print all stacks from nested VErrors.
 process.on('uncaughtException', error => {
@@ -10,12 +12,27 @@ process.on('uncaughtException', error => {
 main()
 
 async function main() {
+    const { csvFileGlob, root, out } = yargs
+        .demandOption('csvFileGlob')
+        .demandOption('out')
+        .demandOption('root').argv as {
+        csvFileGlob: string
+        root: string
+        out: string
+    }
+
+    try {
+        fs.unlinkSync(out)
+    } catch (e) {
+        // yolo
+    }
+
     await index({
-        csvFileGlob: '/Users/chrismwendt/github.com/mozilla/dxr/example/*.csv',
-        root: '/Users/chrismwendt/github.com/mozilla/dxr/example',
+        csvFileGlob,
+        root,
         emit: item =>
             new Promise(resolve => {
-                console.log(JSON.stringify(item))
+                fs.appendFileSync(out, JSON.stringify(item) + '\n')
                 resolve()
             }),
     })
