@@ -242,7 +242,9 @@ function followTransitiveDefsDepth1(refsByDef: Map<string, Set<string>>): void {
                 continue
             }
             transitiveRefs.forEach(tref => refs.add(tref))
-            refsByDef.delete(ref)
+            if (!Array.from(transitiveRefs).some(tref => tref === ref)) {
+                refsByDef.delete(ref)
+            }
         }
     }
 }
@@ -272,7 +274,19 @@ function mkDispatch({
     > = {
         ref: entry => {
             const location = parseLocation(entry.value.loc, entry.value.locend)
-            // sometimes no defloc (e.g. printf)
+            if (!entry.value.defloc) {
+                link({
+                    def: location,
+                    ref: location,
+                })
+                recordMoniker({
+                    moniker: entry.value.qualname,
+                    range: stringifyLocation(location),
+                    kind: MonikerKind.import,
+                    packageInformation: 'lol',
+                })
+                return
+            }
             const defloc = parseFilePosition(entry.value.defloc)
             link({
                 def: {
@@ -367,6 +381,8 @@ async function emitDefsRefs({
         // (11*moniker:export:$id) <---12*monikerEdge:export:$def
         //                                            \
         //                                            |
+        //  ---2.3*packageEdge:$package---> (2.4*packageEdge:$package)
+        // |                                          |
         // (2.2*moniker:import:$id) <---2.1*monikerEdge:import:$def
         //                                          \ |  ------------------------------------------------------------------
         //                                           \|/                                                                    \
@@ -398,6 +414,7 @@ async function emitDefsRefs({
 
         const importMoniker = importMonikerByRange.get(def)
         if (importMoniker) {
+            console.log('import', importMoniker)
             // 2.1
             await emit<Moniker>({
                 id: 'moniker:import:' + def,
@@ -415,7 +432,7 @@ async function emitDefsRefs({
                 inV: 'moniker:import:' + def,
                 outV: 'resultSet:' + def,
             })
-            //?
+            // 2.3
             await emit<PackageInformation>({
                 id: 'package:' + importMoniker.packageInformation,
                 label: VertexLabels.packageInformation,
@@ -424,7 +441,7 @@ async function emitDefsRefs({
                 name: importMoniker.packageInformation,
                 version: '1.0',
             })
-            //?
+            // 2.4
             await emit<packageInformation>({
                 id: 'packageEdge:' + importMoniker.packageInformation,
                 label: EdgeLabels.packageInformation,
