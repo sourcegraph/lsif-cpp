@@ -425,7 +425,6 @@ async function emitDefsRefs({
 
         const importMoniker = importMonikerByRange.get(def)
         if (importMoniker) {
-            console.log('import', importMoniker)
             // 2.1
             await emit<Moniker>({
                 id: 'moniker:import:' + def,
