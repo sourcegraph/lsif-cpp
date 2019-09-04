@@ -47,6 +47,7 @@ import {
     ItemEdgeProperties,
     MonikerKind,
     moniker,
+    packageInformation,
 } from 'lsif-protocol'
 import * as lsp from 'vscode-languageserver-protocol'
 import * as P from 'parsimmon'
@@ -79,8 +80,14 @@ export async function index({
     const rangesByDoc = new Map<string, Set<string>>()
     const refsByDef = new Map<string, Set<string>>()
     const locByRange = new Map<string, lsp.Location>()
-    const importMonikerByRange = new Map<string, string>()
-    const exportMonikerByRange = new Map<string, string>()
+    const importMonikerByRange = new Map<
+        string,
+        { moniker: string; packageInformation: string }
+    >()
+    const exportMonikerByRange = new Map<
+        string,
+        { moniker: string; packageInformation: string }
+    >()
 
     function onDoc(doc: string): void {
         if (!docs.has(doc)) {
@@ -126,17 +133,19 @@ export async function index({
         moniker,
         range,
         kind,
+        packageInformation,
     }: {
         moniker: string
         range: string
         kind: MonikerKind
+        packageInformation: string
     }): void {
         switch (kind) {
             case MonikerKind.import:
-                importMonikerByRange.set(range, moniker)
+                importMonikerByRange.set(range, { moniker, packageInformation })
                 break
             case MonikerKind.export:
-                exportMonikerByRange.set(range, moniker)
+                exportMonikerByRange.set(range, { moniker, packageInformation })
                 break
             default:
                 console.log('unimplemented kind', kind)
@@ -208,6 +217,7 @@ type RecordMoniker = (arg: {
     moniker: string
     range: string
     kind: MonikerKind
+    packageInformation: string
 }) => void
 
 async function scanCsvFile({
@@ -281,6 +291,7 @@ function mkDispatch({
                     moniker: entry.value.qualname,
                     range: stringifyLocation(location),
                     kind: MonikerKind.import,
+                    packageInformation: 'lol',
                 })
                 return
             }
@@ -295,6 +306,7 @@ function mkDispatch({
                 moniker: entry.value.qualname,
                 range: stringifyLocation(defLocation),
                 kind: MonikerKind.export,
+                packageInformation: 'lol',
             })
             link({
                 def: defLocation,
@@ -335,8 +347,14 @@ async function emitDefsRefs({
     refsByDef: Map<string, Set<string>>
     locByRange: Map<string, lsp.Location>
     emit: Emit
-    importMonikerByRange: Map<string, string>
-    exportMonikerByRange: Map<string, string>
+    importMonikerByRange: Map<
+        string,
+        { moniker: string; packageInformation: string }
+    >
+    exportMonikerByRange: Map<
+        string,
+        { moniker: string; packageInformation: string }
+    >
 }): Promise<void> {
     for (const [def, refs] of Array.from(refsByDef.entries())) {
         const defLoc = locByRange.get(def)
@@ -344,6 +362,8 @@ async function emitDefsRefs({
             throw new Error('Unable to look up def')
         }
 
+        //  ---14*packageEdge:$package---> (13*packageEdge:$package)
+        // |
         // (11*moniker:export:$id) <---12*monikerEdge:export:$def
         //                                            \
         //                                            |
@@ -383,7 +403,7 @@ async function emitDefsRefs({
                 id: 'moniker:import:' + def,
                 label: VertexLabels.moniker,
                 type: ElementTypes.vertex,
-                identifier: importMoniker,
+                identifier: importMoniker.moniker,
                 kind: MonikerKind.import,
                 scheme: 'cpp',
             })
@@ -394,6 +414,23 @@ async function emitDefsRefs({
                 type: ElementTypes.edge,
                 inV: 'moniker:import:' + def,
                 outV: 'resultSet:' + def,
+            })
+            //?
+            await emit<PackageInformation>({
+                id: 'package:' + importMoniker.packageInformation,
+                label: VertexLabels.packageInformation,
+                type: ElementTypes.vertex,
+                manager: 'cpp',
+                name: importMoniker.packageInformation,
+                version: '1.0',
+            })
+            //?
+            await emit<packageInformation>({
+                id: 'packageEdge:' + importMoniker.packageInformation,
+                label: EdgeLabels.packageInformation,
+                type: ElementTypes.edge,
+                inV: 'package:' + importMoniker.packageInformation,
+                outV: 'moniker:import:' + def,
             })
         } else {
             // 3
@@ -489,8 +526,8 @@ async function emitDefsRefs({
                 id: 'moniker:export:' + def,
                 label: VertexLabels.moniker,
                 type: ElementTypes.vertex,
-                identifier: exportMoniker,
-                kind: MonikerKind.import,
+                identifier: exportMoniker.moniker,
+                kind: MonikerKind.export,
                 scheme: 'cpp',
             })
             // 12
@@ -500,6 +537,23 @@ async function emitDefsRefs({
                 type: ElementTypes.edge,
                 inV: 'moniker:export:' + def,
                 outV: 'resultSet:' + def,
+            })
+            // 13
+            await emit<PackageInformation>({
+                id: 'package:' + exportMoniker.packageInformation,
+                label: VertexLabels.packageInformation,
+                type: ElementTypes.vertex,
+                manager: 'cpp',
+                name: exportMoniker.packageInformation,
+                version: '1.0',
+            })
+            // 14
+            await emit<packageInformation>({
+                id: 'packageEdge:' + exportMoniker.packageInformation,
+                label: EdgeLabels.packageInformation,
+                type: ElementTypes.edge,
+                inV: 'package:' + exportMoniker.packageInformation,
+                outV: 'moniker:export:' + def,
             })
         }
     }
