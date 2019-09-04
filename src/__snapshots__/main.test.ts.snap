@@ -6,10 +6,10 @@ exports[`cross-app 1`] = `
 {\\"id\\":\\"projectBegin\\",\\"data\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"project\\"}
 {\\"id\\":\\"document:lib.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///lib.h\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"Y2hhciAqdXBwZXJjYXNlKGNoYXIgKnN0cik7Cg==\\"}
 {\\"id\\":\\"documentBegin:lib.h\\",\\"data\\":\\"document:lib.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"document\\"}
-{\\"id\\":\\"document:app.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///app.cpp\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"I2luY2x1ZGUgImxpYi5oIgoKaW50IG1haW4oKSB7CiAgICAvLyBUT0RPIHN1cHBvcnQgcHJpbnRmIChubyBkZWZsb2Mgb24gdGhlIHJlZikKICAgIC8vIHByaW50ZigiaGVsbG8sICVzXG4iLCB1cHBlcmNhc2UoIndvcmxkIikpOwogICAgdXBwZXJjYXNlKCJ3b3JsZCIpOwp9Cg==\\"}
+{\\"id\\":\\"document:app.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"document\\",\\"uri\\":\\"file:///app.cpp\\",\\"languageId\\":\\"cpp\\",\\"contents\\":\\"I2luY2x1ZGUgImxpYi5oIgojaW5jbHVkZSA8c3RkaW8uaD4KCmludCBtYWluKCkgewogICAgLy8gVE9ETyBzdXBwb3J0IHByaW50ZiAobm8gZGVmbG9jIG9uIHRoZSByZWYpCiAgICAvLyBwcmludGYoImhlbGxvLCAlc1xuIiwgdXBwZXJjYXNlKCJ3b3JsZCIpKTsKICAgIHByaW50ZigiaGVsbG8sICVzXG4iLCB1cHBlcmNhc2UoIndvcmxkIikpOwp9Cg==\\"}
 {\\"id\\":\\"documentBegin:app.cpp\\",\\"data\\":\\"document:app.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"begin\\",\\"scope\\":\\"document\\"}
 {\\"id\\":\\"lib.h:0:6\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":0,\\"character\\":6},\\"end\\":{\\"line\\":0,\\"character\\":6}}
-{\\"id\\":\\"app.cpp:5:4\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":5,\\"character\\":4},\\"end\\":{\\"line\\":5,\\"character\\":13}}
+{\\"id\\":\\"app.cpp:6:26\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":6,\\"character\\":26},\\"end\\":{\\"line\\":6,\\"character\\":35}}
 {\\"id\\":\\"resultSet:lib.h:0:6\\",\\"label\\":\\"resultSet\\",\\"type\\":\\"vertex\\"}
 {\\"id\\":\\"next:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.h:0:6\\",\\"inV\\":\\"resultSet:lib.h:0:6\\"}
 {\\"id\\":\\"moniker:import:lib.h:0:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"uppercase(char *)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
@@ -18,11 +18,11 @@ exports[`cross-app 1`] = `
 {\\"id\\":\\"packageEdge:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"edge\\",\\"inV\\":\\"package:lol\\",\\"outV\\":\\"moniker:import:lib.h:0:6\\"}
 {\\"id\\":\\"reference:lib.h:0:6\\",\\"label\\":\\"referenceResult\\",\\"type\\":\\"vertex\\"}
 {\\"id\\":\\"textDocument/references:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"textDocument/references\\",\\"outV\\":\\"resultSet:lib.h:0:6\\",\\"inV\\":\\"reference:lib.h:0:6\\"}
-{\\"id\\":\\"next:app.cpp:5:4\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"app.cpp:5:4\\",\\"inV\\":\\"resultSet:lib.h:0:6\\"}
-{\\"id\\":\\"item:textDocument/references:references:lib.h:0:6:app.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.h:0:6\\",\\"inVs\\":[\\"app.cpp:5:4\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:app.cpp\\"}
+{\\"id\\":\\"next:app.cpp:6:26\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"app.cpp:6:26\\",\\"inV\\":\\"resultSet:lib.h:0:6\\"}
+{\\"id\\":\\"item:textDocument/references:references:lib.h:0:6:app.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.h:0:6\\",\\"inVs\\":[\\"app.cpp:6:26\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:app.cpp\\"}
 {\\"id\\":\\"contains:lib.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:lib.h\\",\\"inVs\\":[\\"lib.h:0:6\\"]}
 {\\"id\\":\\"documentEnd:lib.h\\",\\"data\\":\\"document:lib.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"document\\"}
-{\\"id\\":\\"contains:app.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:app.cpp\\",\\"inVs\\":[\\"app.cpp:5:4\\"]}
+{\\"id\\":\\"contains:app.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:app.cpp\\",\\"inVs\\":[\\"app.cpp:6:26\\"]}
 {\\"id\\":\\"documentEnd:app.cpp\\",\\"data\\":\\"document:app.cpp\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"document\\"}
 {\\"id\\":\\"projectContains\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"project\\",\\"inVs\\":[\\"document:lib.h\\",\\"document:app.cpp\\"]}
 {\\"id\\":\\"projectEnd\\",\\"data\\":\\"project\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"project\\"}"
