@@ -1,5 +1,5 @@
 import { index } from './index'
-import * as yargs from 'yargs'
+import yargs from 'yargs'
 import * as fs from 'fs'
 
 // Causes node to print all stacks from nested VErrors.
