@@ -32,11 +32,13 @@ fi
 cmd="$1"
 
 export CXX="clang++ -Xclang -load -Xclang /home/dxr/dxr/dxr/plugins/clang/libclang-index-plugin.so -Xclang -add-plugin -Xclang dxr-index -Xclang -plugin-arg-dxr-index -Xclang /host/root"
+export CC="clang -Xclang -load -Xclang /home/dxr/dxr/dxr/plugins/clang/libclang-index-plugin.so -Xclang -add-plugin -Xclang dxr-index -Xclang -plugin-arg-dxr-index -Xclang /host/root"
 echo "Running... $cmd"
 
 docker run \
   --rm \
   -e CXX="$CXX" \
+  -e CC="$CC" \
   -e DXR_CXX_CLANG_TEMP_FOLDER=/host/output \
   -v "$ABSOUTDIR":/host/output \
   -v "$ABSROOTDIR":/host/root \
