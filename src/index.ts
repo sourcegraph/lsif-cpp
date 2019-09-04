@@ -718,7 +718,15 @@ function forEachLine({
             try {
                 onLine(line)
             } catch (e) {
-                reject(e)
+                reject(
+                    new VError(
+                        {
+                            cause: e,
+                            info: { lineNumber, filePath },
+                        },
+                        'error'
+                    )
+                )
             }
             lineNumber++
         })

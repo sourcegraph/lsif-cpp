@@ -27,13 +27,18 @@ async function main() {
         // yolo
     }
 
-    await index({
-        csvFileGlob,
-        root,
-        emit: item =>
-            new Promise(resolve => {
-                fs.appendFileSync(out, JSON.stringify(item) + '\n')
-                resolve()
-            }),
-    })
+    try {
+        await index({
+            csvFileGlob,
+            root,
+            emit: item =>
+                new Promise(resolve => {
+                    fs.appendFileSync(out, JSON.stringify(item) + '\n')
+                    resolve()
+                }),
+        })
+    } catch (e) {
+        console.error(e)
+        process.exit(1)
+    }
 }
