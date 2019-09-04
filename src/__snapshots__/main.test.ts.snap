@@ -60,7 +60,7 @@ exports[`cross-lib 1`] = `
 {\\"id\\":\\"item:textDocument/references:definitions:lib.cpp:2:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.cpp:2:6\\",\\"inVs\\":[\\"lib.cpp:2:6\\"],\\"property\\":\\"definitions\\",\\"document\\":\\"document:lib.cpp\\"}
 {\\"id\\":\\"next:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.h:0:6\\",\\"inV\\":\\"resultSet:lib.cpp:2:6\\"}
 {\\"id\\":\\"item:textDocument/references:references:lib.cpp:2:6:lib.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.cpp:2:6\\",\\"inVs\\":[\\"lib.h:0:6\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:lib.h\\"}
-{\\"id\\":\\"moniker:export:lib.cpp:2:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"uppercase(char *)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
+{\\"id\\":\\"moniker:export:lib.cpp:2:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"uppercase(char *)\\",\\"kind\\":\\"export\\",\\"scheme\\":\\"cpp\\"}
 {\\"id\\":\\"monikerEdge:export:lib.cpp:2:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:export:lib.cpp:2:6\\",\\"outV\\":\\"resultSet:lib.cpp:2:6\\"}
 {\\"id\\":\\"package:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"vertex\\",\\"manager\\":\\"cpp\\",\\"name\\":\\"lol\\",\\"version\\":\\"1.0\\"}
 {\\"id\\":\\"packageEdge:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"edge\\",\\"inV\\":\\"package:lol\\",\\"outV\\":\\"moniker:export:lib.cpp:2:6\\"}
@@ -161,7 +161,7 @@ exports[`five 1`] = `
 {\\"id\\":\\"next:main.cpp:13:2\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"main.cpp:13:2\\",\\"inV\\":\\"resultSet:five.cpp:2:4\\"}
 {\\"id\\":\\"item:textDocument/references:references:five.cpp:2:4:five.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:five.cpp:2:4\\",\\"inVs\\":[\\"five.h:1:4\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:five.h\\"}
 {\\"id\\":\\"item:textDocument/references:references:five.cpp:2:4:main.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:five.cpp:2:4\\",\\"inVs\\":[\\"main.cpp:11:2\\",\\"main.cpp:13:2\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:main.cpp\\"}
-{\\"id\\":\\"moniker:export:five.cpp:2:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"five(int)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
+{\\"id\\":\\"moniker:export:five.cpp:2:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"five(int)\\",\\"kind\\":\\"export\\",\\"scheme\\":\\"cpp\\"}
 {\\"id\\":\\"monikerEdge:export:five.cpp:2:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:export:five.cpp:2:4\\",\\"outV\\":\\"resultSet:five.cpp:2:4\\"}
 {\\"id\\":\\"package:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"vertex\\",\\"manager\\":\\"cpp\\",\\"name\\":\\"lol\\",\\"version\\":\\"1.0\\"}
 {\\"id\\":\\"packageEdge:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"edge\\",\\"inV\\":\\"package:lol\\",\\"outV\\":\\"moniker:export:five.cpp:2:4\\"}
