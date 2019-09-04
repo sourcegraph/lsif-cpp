@@ -4,4 +4,4 @@ set -ex
 
 ./build
 
-node -r source-map-support/register out/main.js "$@"
+node out/main.js "$@"

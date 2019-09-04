@@ -3,6 +3,8 @@ import * as fs from 'fs'
 import * as util from 'util'
 import * as path from 'path'
 import { VError } from 'verror'
+import * as sourceMapSupport from 'source-map-support'
+sourceMapSupport.install()
 import {
     fromPairs,
     chunk,

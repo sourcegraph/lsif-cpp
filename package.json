@@ -8,6 +8,7 @@
     "@types/lodash": "^4.14.137",
     "@types/node": "^12.7.2",
     "@types/parsimmon": "^1.10.0",
+    "@types/source-map-support": "^0.5.0",
     "@types/verror": "^1.10.3",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
