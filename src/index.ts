@@ -631,13 +631,19 @@ async function emitDocsBegin({
     doc: string
     emit: Emit
 }): Promise<void> {
+    let contents = ''
+    try {
+        contents = fs.readFileSync(path.join(root, doc)).toString('base64')
+    } catch (e) {
+        // ignore
+    }
     await emit<Document>({
         id: 'document:' + doc,
         type: ElementTypes.vertex,
         label: VertexLabels.document,
         uri: 'file:///' + doc,
         languageId: 'cpp',
-        contents: fs.readFileSync(path.join(root, doc)).toString('base64'),
+        contents,
     })
     await emit<DocumentEvent>({
         id: 'documentBegin:' + doc,
