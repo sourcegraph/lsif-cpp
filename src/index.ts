@@ -229,9 +229,18 @@ async function scanCsvFile({
     csvFile: string
     cb: (genericEntry: GenericEntry) => void
 }) {
+    let chunk = ''
     await forEachLine({
         filePath: csvFile,
-        onLine: line => cb(ericParse(line)),
+        onLine: line => {
+            if (line.endsWith('\\')) {
+                chunk += line.replace(/\\$/, '').replace(/""/g, '\\"')
+            } else {
+                chunk += line
+                cb(ericParse(chunk))
+                chunk = ''
+            }
+        },
     })
 }
 
