@@ -14,6 +14,10 @@ exports[`cross-app 1`] = `
 {\\"id\\":\\"next:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.h:0:6\\",\\"inV\\":\\"resultSet:lib.h:0:6\\"}
 {\\"id\\":\\"moniker:import:lib.h:0:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"uppercase(char *)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
 {\\"id\\":\\"monikerEdge:import:lib.h:0:6\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:import:lib.h:0:6\\",\\"outV\\":\\"resultSet:lib.h:0:6\\"}
+{\\"id\\":\\"reference:lib.h:0:6\\",\\"label\\":\\"referenceResult\\",\\"type\\":\\"vertex\\"}
+{\\"id\\":\\"textDocument/references:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"textDocument/references\\",\\"outV\\":\\"resultSet:lib.h:0:6\\",\\"inV\\":\\"reference:lib.h:0:6\\"}
+{\\"id\\":\\"next:app.cpp:5:4\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"app.cpp:5:4\\",\\"inV\\":\\"resultSet:lib.h:0:6\\"}
+{\\"id\\":\\"item:textDocument/references:references:lib.h:0:6:app.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.h:0:6\\",\\"inVs\\":[\\"app.cpp:5:4\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:app.cpp\\"}
 {\\"id\\":\\"contains:lib.h\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:lib.h\\",\\"inVs\\":[\\"lib.h:0:6\\"]}
 {\\"id\\":\\"documentEnd:lib.h\\",\\"data\\":\\"document:lib.h\\",\\"type\\":\\"vertex\\",\\"label\\":\\"$event\\",\\"kind\\":\\"end\\",\\"scope\\":\\"document\\"}
 {\\"id\\":\\"contains:app.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"contains\\",\\"outV\\":\\"document:app.cpp\\",\\"inVs\\":[\\"app.cpp:5:4\\"]}

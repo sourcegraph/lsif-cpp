@@ -395,7 +395,6 @@ async function emitDefsRefs({
                 inV: 'moniker:import:' + def,
                 outV: 'resultSet:' + def,
             })
-            return
         } else {
             // 3
             await emit<DefinitionResult>({
