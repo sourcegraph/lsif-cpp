@@ -1,0 +1,6 @@
+type,name,"Foo",qualname,"Foo",loc,"lib.h:1:6",locend,"lib.h:1:9",kind,"class"
+decldef,name,"Foo",qualname,"Foo::Foo()",loc,"lib.h:4:4",locend,"lib.h:4:7",kind,"function"
+decldef,name,"uppercase",qualname,"Foo::uppercase(char *)",loc,"lib.h:6:10",locend,"lib.h:6:19",kind,"function"
+type,name,"Bar",qualname,"Bar",loc,"lib.h:9:6",locend,"lib.h:9:9",kind,"class"
+decldef,name,"Bar",qualname,"Bar::Bar()",loc,"lib.h:12:4",locend,"lib.h:12:7",kind,"function"
+decldef,name,"uppercase",qualname,"Bar::uppercase(char *)",loc,"lib.h:14:10",locend,"lib.h:14:19",kind,"function"

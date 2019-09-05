@@ -1,6 +1,9 @@
 #include "lib.h"
 
-char *uppercase(char *str) {
-    // noop
+char *Foo::uppercase(char *str) {
+    return str;
+}
+
+char *Bar::uppercase(char *str) {
     return str;
 }
