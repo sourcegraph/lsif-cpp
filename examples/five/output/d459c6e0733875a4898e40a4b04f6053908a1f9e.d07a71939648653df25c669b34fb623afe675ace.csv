@@ -1,2 +1,0 @@
-variable,name,"six",qualname,"six",loc,"five.h:1:4",locend,"five.h:1:7",type,"int"
-decldef,name,"five",qualname,"five(int)",loc,"five.h:2:4",locend,"five.h:2:8",kind,"function"
