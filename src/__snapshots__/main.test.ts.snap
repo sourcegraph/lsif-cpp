@@ -102,9 +102,9 @@ exports[`cross-lib 1`] = `
 {\\"id\\":\\"lib.cpp:6:6\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":6,\\"character\\":6},\\"end\\":{\\"line\\":6,\\"character\\":9}}
 {\\"id\\":\\"lib.cpp:6:27\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":6,\\"character\\":27},\\"end\\":{\\"line\\":6,\\"character\\":27}}
 {\\"id\\":\\"lib.cpp:7:11\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":7,\\"character\\":11},\\"end\\":{\\"line\\":7,\\"character\\":14}}
-{\\"id\\":\\"lib.cpp:2:11\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":2,\\"character\\":11},\\"end\\":{\\"line\\":2,\\"character\\":11}}
+{\\"id\\":\\"lib.cpp:2:11\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":2,\\"character\\":11},\\"end\\":{\\"line\\":2,\\"character\\":20}}
 {\\"id\\":\\"lib.h:5:10\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":5,\\"character\\":10},\\"end\\":{\\"line\\":5,\\"character\\":19}}
-{\\"id\\":\\"lib.cpp:6:11\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":6,\\"character\\":11},\\"end\\":{\\"line\\":6,\\"character\\":11}}
+{\\"id\\":\\"lib.cpp:6:11\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":6,\\"character\\":11},\\"end\\":{\\"line\\":6,\\"character\\":20}}
 {\\"id\\":\\"lib.h:13:10\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":13,\\"character\\":10},\\"end\\":{\\"line\\":13,\\"character\\":19}}
 {\\"id\\":\\"resultSet:lib.h:0:6\\",\\"label\\":\\"resultSet\\",\\"type\\":\\"vertex\\"}
 {\\"id\\":\\"next:lib.h:0:6\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"lib.h:0:6\\",\\"inV\\":\\"resultSet:lib.h:0:6\\"}
@@ -206,7 +206,7 @@ exports[`five 1`] = `
 {\\"id\\":\\"main.cpp:14:2\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":14,\\"character\\":2},\\"end\\":{\\"line\\":14,\\"character\\":6}}
 {\\"id\\":\\"main.cpp:5:4\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":5,\\"character\\":4},\\"end\\":{\\"line\\":5,\\"character\\":4}}
 {\\"id\\":\\"main.cpp:14:7\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":14,\\"character\\":7},\\"end\\":{\\"line\\":14,\\"character\\":10}}
-{\\"id\\":\\"five.cpp:2:4\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":2,\\"character\\":4},\\"end\\":{\\"line\\":2,\\"character\\":4}}
+{\\"id\\":\\"five.cpp:2:4\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":2,\\"character\\":4},\\"end\\":{\\"line\\":2,\\"character\\":8}}
 {\\"id\\":\\"resultSet:main.cpp:2:8\\",\\"label\\":\\"resultSet\\",\\"type\\":\\"vertex\\"}
 {\\"id\\":\\"next:main.cpp:2:8\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"main.cpp:2:8\\",\\"inV\\":\\"resultSet:main.cpp:2:8\\"}
 {\\"id\\":\\"definition:main.cpp:2:8\\",\\"label\\":\\"definitionResult\\",\\"type\\":\\"vertex\\"}

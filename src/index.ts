@@ -262,7 +262,7 @@ function followTransitiveDefsDepth1(refsByDef: Map<string, Set<string>>): void {
 
 // Cross-file j2d through a header file looks like this:
 //
-// ref,defloc,"five.h:2:4",loc,"main.cpp:13:2",locend,"main.cpp:13:6",kind,"function",name,"five",qualname,"five(int)"
+// ref,defloc,"five.h:2:4",deflocend,"five.h:2:8",loc,"main.cpp:13:2",locend,"main.cpp:13:6",kind,"function",name,"five",qualname,"five(int)"
 // decldef,name,"five",qualname,"five(int)",loc,"five.h:2:4",locend,"five.h:2:8",defloc,"five.cpp:3:4",kind,"function"
 //
 // Trimming that down to what's relevant:
@@ -298,14 +298,8 @@ function mkDispatch({
                 })
                 return
             }
-            const defloc = parseFilePosition(entry.value.defloc)
             link({
-                def: {
-                    uri: defloc.uri,
-                    // Using the same position for start/end is wrong
-                    // Need to fill in the right `end` when we scan an entry with the same `start`
-                    range: { start: defloc.position, end: defloc.position },
-                },
+                def: parseLocation(entry.value.defloc, entry.value.defloc),
                 ref: location,
             })
         },
@@ -320,13 +314,7 @@ function mkDispatch({
                 })
                 return
             }
-            const defloc = parseFilePosition(entry.value.defloc)
-            const defLocation = {
-                uri: defloc.uri,
-                // Using the same position for start/end is wrong
-                // Need to fill in the right `end` when we scan an entry with the same `start`
-                range: { start: defloc.position, end: defloc.position },
-            }
+            const defLocation = parseLocation(entry.value.defloc, entry.value.deflocend)
             recordMoniker({
                 moniker: entry.value.qualname,
                 range: stringifyLocation(defLocation),

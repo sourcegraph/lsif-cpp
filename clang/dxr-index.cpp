@@ -503,8 +503,10 @@ public:
     recordValue("loc", locationToString(decl->getLocation()));
     recordValue("locend",
                 locationToString(afterToken(decl->getLocation(), name)));
-    if (def)
+    if (def) {
       recordValue("defloc", locationToString(def->getLocation()));
+      recordValue("deflocend", locationToString(afterToken(def->getLocation(), name)));
+    }
     if (kind)
       recordValue("kind", kind);
     *out << std::endl;
@@ -894,8 +896,10 @@ public:
     SourceLocation nonMacroRefLoc = escapeMacros(refLoc);
     std::string name = d->getNameAsString();
     beginRecord("ref", nonMacroRefLoc);
-    if (interestingLocation(d->getLocation()))
+    if (interestingLocation(d->getLocation())) {
       recordValue("defloc", locationToString(d->getLocation()));
+      recordValue("deflocend", locationToString(afterToken(d->getLocation(), name)));
+    }
     recordValue("loc", locationToString(nonMacroRefLoc));
     recordLocEndForName(name, nonMacroRefLoc, escapeMacros(end));
     if (kind)
@@ -1248,6 +1252,7 @@ public:
     beginRecord("ref", refLoc);
     recordValue("name", std::string(ii->getNameStart(), ii->getLength()));
     recordValue("defloc", locationToString(macroLoc));
+    recordValue("deflocend", locationToString(afterToken(macroLoc)));
     recordValue("loc", locationToString(refLoc));
     recordValue("locend", locationToString(afterToken(refLoc)));
     recordValue("kind", "macro");
