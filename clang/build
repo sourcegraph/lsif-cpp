@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd $(dirname "${BASH_SOURCE[0]}")/..
+
 set -e
 
-docker build -f Dockerfile -t clang .
+docker build -f clang/Dockerfile -t clang ./clang/

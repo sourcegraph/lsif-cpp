@@ -10,38 +10,38 @@ A first draft specification can be found [here](https://github.com/Microsoft/lan
 
 ## Quickstart
 
-Build the `clang` docker container that contains the instrumented compiler:
+Build the `clang` docker container that contains the instrumented compiler and this tool:
 
 ```
-cd clang
-./build
-cd -
+./build && ./clang/build
 ```
 
 Compile a C/C++ project and generate intermediate CSV output:
 
 ```
-env CLEAN=true ABSROOTDIR=$PWD/examples/cross-app/root ABSOUTDIR=$PWD/examples/cross-app/output ./generate-csv "\$CXX -c *.cpp"
+env \
+  CLEAN=true \
+  ABSROOTDIR=$PWD/examples/cross-app/root \
+  ABSOUTDIR=$PWD/examples/cross-app/output \
+  ./generate-csv "\$CXX -c *.cpp"
 ```
 
 Convert that CSV into LSIF:
 
 ```
-node ~/github.com/sourcegraph/lsif-cpp/out/main.js --csvFileGlob="examples/cross-app/output/*.csv" --root=examples/cross-app/root --out app.lsif
+node \
+  ./out/main.js \
+  --csvFileGlob="examples/cross-app/output/*.csv" \
+  --root=examples/cross-app/root \
+  --out app.lsif
 ```
 
-Gzip the LSIF file:
-
-```
-cat app.lsif | gzip > app.lsif.gz
-```
-
-Upload the LSIF data to Sourcegraph (depends on https://github.com/sourcegraph/sourcegraph/issues/5516):
+Upload the LSIF data to Sourcegraph:
 
 ```
 env \
   SRC_ENDPOINT=http://localhost:3080 \
   REPOSITORY=127.0.0.1-3434/repos/cross-lib/root \
   COMMIT=$libcommit \
-  bash ~/github.com/sourcegraph/sourcegraph/lsif/upload.sh app.lsif.gz
+  bash ~/github.com/sourcegraph/sourcegraph/lsif/upload.sh app.lsif
 ```
