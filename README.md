@@ -10,10 +10,10 @@ A first draft specification can be found [here](https://github.com/Microsoft/lan
 
 ## Quickstart
 
-Build this tool and the `clang` docker container that contains the instrumented compiler:
+Build the instrumented compiler and the LSIF conversion tool:
 
 ```
-./build && ./clang/build
+./build
 ```
 
 Compile a C/C++ project with the instrumented compiler to generate intermediate CSV output:

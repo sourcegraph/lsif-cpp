@@ -959,7 +959,11 @@ public:
   }
 
   bool VisitCallExpr(CallExpr *e) {
+#if CLANG_AT_LEAST(8, 0)
+    if (!interestingLocation(e->getBeginLoc()))
+#else
     if (!interestingLocation(e->getLocStart()))
+#endif
       return true;
 
     Decl *callee = e->getCalleeDecl();
@@ -972,9 +976,15 @@ public:
     // 1. callee isn't necessarily a function. Think function pointers.
     // 2. We might not be in a function. Think global function decls
     // 3. Virtual functions need not be called virtually!
+#if CLANG_AT_LEAST(8, 0)
+    beginRecord("call", e->getBeginLoc());
+    recordValue("callloc", locationToString(e->getBeginLoc()));
+    recordValue("calllocend", locationToString(e->getEndLoc()));
+#else
     beginRecord("call", e->getLocStart());
     recordValue("callloc", locationToString(e->getLocStart()));
     recordValue("calllocend", locationToString(e->getLocEnd()));
+#endif
     if (interestingLocation(callee->getLocation()))
       recordValue("calleeloc", locationToString(callee->getLocation()));
     recordValue("name", namedCallee->getNameAsString());
@@ -999,7 +1009,11 @@ public:
   }
 
   bool VisitCXXConstructExpr(CXXConstructExpr *e) {
+#if CLANG_AT_LEAST(8, 0)
+    if (!interestingLocation(e->getBeginLoc()))
+#else
     if (!interestingLocation(e->getLocStart()))
+#endif
       return true;
 
     CXXConstructorDecl *callee = e->getConstructor();
@@ -1010,9 +1024,15 @@ public:
     // 1. callee isn't necessarily a function. Think function pointers.
     // 2. We might not be in a function. Think global function decls
     // 3. Virtual functions need not be called virtually!
+#if CLANG_AT_LEAST(8, 0)
+    beginRecord("call", e->getBeginLoc());
+    recordValue("callloc", locationToString(e->getBeginLoc()));
+    recordValue("calllocend", locationToString(e->getEndLoc()));
+#else
     beginRecord("call", e->getLocStart());
     recordValue("callloc", locationToString(e->getLocStart()));
     recordValue("calllocend", locationToString(e->getLocEnd()));
+#endif
     if (interestingLocation(callee->getLocation()))
       recordValue("calleeloc", locationToString(callee->getLocation()));
     recordValue("name", callee->getNameAsString());

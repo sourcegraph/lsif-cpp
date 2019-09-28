@@ -16,9 +16,6 @@ if [ -z "$1" ] || [ -z "$ABSOUTDIR" ] || [ -z "$ABSROOTDIR" ] || [ "$1" = "--hel
   echo "Example:"
   echo
   echo "  env CLEAN=true ABSROOTDIR=\$PWD/examples/five/root ABSOUTDIR=\$PWD/examples/five/output ./generate-csv \"\\\$CXX -c /host/root/*.cpp ; ls /host/output\""
-  echo
-  echo "Prerequisites:"
-  echo "- A docker container named 'clang' exists (built by ./clang/build)"
   exit 1
 fi
 
@@ -29,21 +26,19 @@ fi
 
 cmd="$1"
 
-FLAGS="-Xclang -load -Xclang /clang/libclang-index-plugin.so -Xclang -add-plugin -Xclang dxr-index -Xclang -plugin-arg-dxr-index -Xclang /host/root"
+FLAGS="-Xclang -load -Xclang $(realpath "$(dirname "${BASH_SOURCE[0]}")")/clang/libclang-index-plugin.so -Xclang -add-plugin -Xclang dxr-index -Xclang -plugin-arg-dxr-index -Xclang ."
 export CXX="clang++ $FLAGS"
 export CC="clang $FLAGS"
 echo "Running... $cmd"
 
-docker run \
-  --rm \
-  -e CXX="$CXX" \
-  -e CC="$CC" \
-  -e DXR_CXX_CLANG_TEMP_FOLDER=/host/output \
-  -v "$ABSOUTDIR":/host/output \
-  -v "$ABSROOTDIR":/host/root \
-  -w /host/root \
-  clang \
-  bash -c "$cmd"
+(
+    cd "$ABSROOTDIR"
+    env \
+        CXX="$CXX" \
+        CC="$CC" \
+        DXR_CXX_CLANG_TEMP_FOLDER="$ABSOUTDIR" \
+        bash -c "$cmd"
+)
 
 echo
 echo "Generated $(find "$ABSOUTDIR" -maxdepth 1 -mindepth 1 -name "*.csv" | wc -l | awk '{ print $1 }') .csv files. Output location: $ABSOUTDIR/*.csv"

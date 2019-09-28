@@ -5,3 +5,5 @@ set -ex
 yarn -s
 
 yarn run tsc
+
+( cd clang && make clean && make )
