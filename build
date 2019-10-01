@@ -2,6 +2,10 @@
 
 set -ex
 
+root="$(dirname "${BASH_SOURCE[0]}")"
+
+cd "$root"
+
 yarn -s
 
 yarn run tsc
