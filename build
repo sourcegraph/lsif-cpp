@@ -10,4 +10,4 @@ yarn -s
 
 yarn run tsc
 
-( cd clang && make clean && make )
+( cd clang && make )
