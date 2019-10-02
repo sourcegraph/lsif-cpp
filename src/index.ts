@@ -314,7 +314,10 @@ function mkDispatch({
                 })
                 return
             }
-            const defLocation = parseLocation(entry.value.defloc, entry.value.deflocend)
+            const defLocation = parseLocation(
+                entry.value.defloc,
+                entry.value.deflocend
+            )
             recordMoniker({
                 moniker: entry.value.qualname,
                 range: stringifyLocation(defLocation),
