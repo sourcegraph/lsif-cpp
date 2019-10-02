@@ -234,10 +234,10 @@ async function scanCsvFile({
         filePath: csvFile,
         onLine: line => {
             if (line.endsWith('\\')) {
-                chunk += line.replace(/\\$/, '').replace(/""/g, '\\"')
+                chunk += line + '\n'
             } else {
                 chunk += line
-                cb(ericParse(chunk))
+                cb(parseEntry(chunk))
                 chunk = ''
             }
         },
@@ -760,14 +760,19 @@ function parseFilePosition(value: string): FilePosition {
     }
 }
 
-// Reimplementation of ericParse with nice error messages, but 5x slower.
-function parsimmonParse(line: string): GenericEntry {
+function parseEntry(line: string): GenericEntry {
     const wordP = P.regexp(/[a-zA-Z_]+/)
     const kindP = wordP
     const keyP = wordP
-    const valueP = P.regexp(/"((?:\\.|.)*?)"/, 1).map(value =>
-        value.replace('\\', '')
-    )
+    const valueP = P.seq(
+        P.string('"'),
+        P.alt(
+            P.string('""').map(_ => '"'),
+            P.seq(P.string('\\'), P.any).map(v => v[1]),
+            P.noneOf('"')
+        ).many(),
+        P.string('"')
+    ).map(([leftQuote, characters, rightQuote]) => characters.join(''))
     const commaP = P.string(',')
     const kvP = P.seq(keyP.skip(commaP), valueP)
     const lineP = P.seq(kindP.skip(commaP), P.sepBy(kvP, commaP)).map(
@@ -775,109 +780,4 @@ function parsimmonParse(line: string): GenericEntry {
     )
 
     return lineP.tryParse(line)
-}
-
-function ericParse(line: string): GenericEntry {
-    function fields(line: string): string[] {
-        let i = 0
-        const fields: any[] = []
-
-        const eatWhitespace = () => {
-            while (i < line.length && line[i] == ' ') {
-                i++
-            }
-        }
-
-        const eatSeparator = () => {
-            if (i < line.length && line[i] == ',') {
-                i++
-                return
-            }
-
-            throw new Error(`expected comma`)
-        }
-
-        const parseIdent = () => {
-            const start = i
-            i++
-            while (i < line.length && isIdent(line[i])) {
-                i++
-            }
-
-            fields.push(line.substring(start, i))
-        }
-
-        const parseString = () => {
-            i++
-            const start = i
-
-            while (i < line.length) {
-                if (line[i] == '"') {
-                    fields.push(line.substring(start, i))
-                    i++
-                    return
-                }
-
-                if (line[i] == '\\') {
-                    if (i + 1 >= line.length) {
-                        throw new Error(`unterminated escape sequence`)
-                    }
-
-                    i++
-                }
-
-                i++
-            }
-
-            throw new Error(`unterminated string`)
-        }
-
-        while (i < line.length) {
-            eatWhitespace()
-
-            if (i > 0) {
-                eatSeparator()
-                eatWhitespace()
-            }
-
-            if (isIdent(line[i])) {
-                parseIdent()
-            } else if (line[i] == '"') {
-                parseString()
-            } else {
-                console.log(fields)
-                throw new Error(`unknown start of token ${line[i]}`)
-            }
-
-            eatWhitespace()
-        }
-
-        return fields
-    }
-
-    function isIdent(char: string): boolean {
-        if (char === '_') {
-            return true
-        }
-
-        if ('a' <= char && char <= 'z') {
-            return true
-        }
-
-        if ('A' <= char && char <= 'Z') {
-            return true
-        }
-
-        return false
-    }
-
-    const parts = fields(line)
-    if (parts.length === 0) {
-        throw new Error('expected at least one field')
-    }
-
-    return {
-        kind: parts[0],
-        value: fromPairs(chunk(parts.slice(1), 2)),
-    }
 }
