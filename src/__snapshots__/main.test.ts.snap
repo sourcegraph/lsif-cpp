@@ -20,7 +20,7 @@ exports[`cross-app 1`] = `
 {\\"id\\":\\"app.cpp:5:26\\",\\"type\\":\\"vertex\\",\\"label\\":\\"range\\",\\"start\\":{\\"line\\":5,\\"character\\":26},\\"end\\":{\\"line\\":5,\\"character\\":29}}
 {\\"id\\":\\"resultSet:app.cpp:4:4\\",\\"label\\":\\"resultSet\\",\\"type\\":\\"vertex\\"}
 {\\"id\\":\\"next:app.cpp:4:4\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"app.cpp:4:4\\",\\"inV\\":\\"resultSet:app.cpp:4:4\\"}
-{\\"id\\":\\"moniker:import:app.cpp:4:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"printf(const char *__restrict, ...)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
+{\\"id\\":\\"moniker:import:app.cpp:4:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"printf(const char *, ...)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
 {\\"id\\":\\"monikerEdge:import:app.cpp:4:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:import:app.cpp:4:4\\",\\"outV\\":\\"resultSet:app.cpp:4:4\\"}
 {\\"id\\":\\"package:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"vertex\\",\\"manager\\":\\"cpp\\",\\"name\\":\\"lol\\",\\"version\\":\\"1.0\\"}
 {\\"id\\":\\"packageEdge:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"edge\\",\\"inV\\":\\"package:lol\\",\\"outV\\":\\"moniker:import:app.cpp:4:4\\"}
@@ -50,7 +50,7 @@ exports[`cross-app 1`] = `
 {\\"id\\":\\"item:textDocument/references:references:lib.h:0:6:app.cpp\\",\\"type\\":\\"edge\\",\\"label\\":\\"item\\",\\"outV\\":\\"reference:lib.h:0:6\\",\\"inVs\\":[\\"app.cpp:4:26\\"],\\"property\\":\\"references\\",\\"document\\":\\"document:app.cpp\\"}
 {\\"id\\":\\"resultSet:app.cpp:5:4\\",\\"label\\":\\"resultSet\\",\\"type\\":\\"vertex\\"}
 {\\"id\\":\\"next:app.cpp:5:4\\",\\"type\\":\\"edge\\",\\"label\\":\\"next\\",\\"outV\\":\\"app.cpp:5:4\\",\\"inV\\":\\"resultSet:app.cpp:5:4\\"}
-{\\"id\\":\\"moniker:import:app.cpp:5:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"printf(const char *__restrict, ...)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
+{\\"id\\":\\"moniker:import:app.cpp:5:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"vertex\\",\\"identifier\\":\\"printf(const char *, ...)\\",\\"kind\\":\\"import\\",\\"scheme\\":\\"cpp\\"}
 {\\"id\\":\\"monikerEdge:import:app.cpp:5:4\\",\\"label\\":\\"moniker\\",\\"type\\":\\"edge\\",\\"inV\\":\\"moniker:import:app.cpp:5:4\\",\\"outV\\":\\"resultSet:app.cpp:5:4\\"}
 {\\"id\\":\\"package:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"vertex\\",\\"manager\\":\\"cpp\\",\\"name\\":\\"lol\\",\\"version\\":\\"1.0\\"}
 {\\"id\\":\\"packageEdge:lol\\",\\"label\\":\\"packageInformation\\",\\"type\\":\\"edge\\",\\"inV\\":\\"package:lol\\",\\"outV\\":\\"moniker:import:app.cpp:5:4\\"}
