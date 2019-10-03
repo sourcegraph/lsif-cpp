@@ -237,7 +237,11 @@ async function scanCsvFile({
                 chunk += line + '\n'
             } else {
                 chunk += line
-                cb(parseEntry(chunk))
+                try {
+                    cb(parseEntry(chunk))
+                } catch (e) {
+                    console.log(e.message, 'continuing...')
+                }
                 chunk = ''
             }
         },
@@ -272,6 +276,24 @@ function followTransitiveDefsDepth1(refsByDef: Map<string, Set<string>>): void {
 //
 // So there's a foreign key constraint between ref.defloc and decldef.loc
 
+/**
+ * Heuristic for the name of the package in which a symbol is defined. It grabs
+ * the first identifier before `::`, which is often the namespace of the
+ * repository (pretty good heuristic). However, I imagine sometimes the first
+ * identifier might be a company-wide namespace (e.g. `companyx::`) or a class
+ * name (e.g. `FooClass::`), both of which would likely cause package
+ * collisions, resulting in lsif-server being unable to find the symbol in some
+ * cases.
+ */
+function extractPackageName(qualname: string): string {
+    // Matches the namespace
+    const matches = qualname.match(/^([a-zA-Z_][a-zA-Z0-9_]*)::/)
+    if (!matches) {
+        return 'unknown'
+    }
+    return matches[1]
+}
+
 function mkDispatch({
     link,
     recordMoniker,
@@ -294,7 +316,9 @@ function mkDispatch({
                     moniker: entry.value.qualname,
                     range: stringifyLocation(location),
                     kind: MonikerKind.import,
-                    packageInformation: 'lol',
+                    packageInformation: extractPackageName(
+                        entry.value.qualname
+                    ),
                 })
                 return
             }
@@ -310,7 +334,9 @@ function mkDispatch({
                     moniker: entry.value.qualname,
                     range: stringifyLocation(location),
                     kind: MonikerKind.import,
-                    packageInformation: 'lol',
+                    packageInformation: extractPackageName(
+                        entry.value.qualname
+                    ),
                 })
                 return
             }
@@ -322,7 +348,7 @@ function mkDispatch({
                 moniker: entry.value.qualname,
                 range: stringifyLocation(defLocation),
                 kind: MonikerKind.export,
-                packageInformation: 'lol',
+                packageInformation: extractPackageName(entry.value.qualname),
             })
             link({
                 def: defLocation,
@@ -435,7 +461,7 @@ async function emitDefsRefs({
             })
             // 2.3
             await emit<PackageInformation>({
-                id: 'package:' + importMoniker.packageInformation,
+                id: 'package:' + importMoniker.packageInformation + ':' + def,
                 label: VertexLabels.packageInformation,
                 type: ElementTypes.vertex,
                 manager: 'cpp',
@@ -444,7 +470,11 @@ async function emitDefsRefs({
             })
             // 2.4
             await emit<packageInformation>({
-                id: 'packageEdge:' + importMoniker.packageInformation,
+                id:
+                    'packageEdge:' +
+                    importMoniker.packageInformation +
+                    ':' +
+                    def,
                 label: EdgeLabels.packageInformation,
                 type: ElementTypes.edge,
                 inV: 'package:' + importMoniker.packageInformation,
@@ -558,7 +588,7 @@ async function emitDefsRefs({
             })
             // 13
             await emit<PackageInformation>({
-                id: 'package:' + exportMoniker.packageInformation,
+                id: 'package:' + exportMoniker.packageInformation + ':' + def,
                 label: VertexLabels.packageInformation,
                 type: ElementTypes.vertex,
                 manager: 'cpp',
@@ -567,7 +597,11 @@ async function emitDefsRefs({
             })
             // 14
             await emit<packageInformation>({
-                id: 'packageEdge:' + exportMoniker.packageInformation,
+                id:
+                    'packageEdge:' +
+                    exportMoniker.packageInformation +
+                    ':' +
+                    def,
                 label: EdgeLabels.packageInformation,
                 type: ElementTypes.edge,
                 inV: 'package:' + exportMoniker.packageInformation,
@@ -748,6 +782,9 @@ function parseFilePosition(value: string): FilePosition {
         throw new Error(
             `expected path of the form path/to/file.cpp:<line>:<column>, got ${value}`
         )
+    }
+    if (components[0] === '') {
+        throw new Error(`expected a path component for file position ${value}`)
     }
     // Oddly enough, line is base 1 but column is base 0.
     // https://github.com/mozilla/dxr/blob/a4a20cc4a9991a3efbc13cb5fe036f3608368e6c/dxr/plugins/clang/dxr-index.cpp#L285-L287
