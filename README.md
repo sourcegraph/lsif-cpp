@@ -2,7 +2,9 @@
 
 Visit https://lsif.dev/ to learn about LSIF.
 
-## Prerequisites
+## Installation
+
+Required tools:
 
 - [Node.js](https://nodejs.org/en/)
 - [Yarn](https://yarnpkg.com/lang/en/)
@@ -23,9 +25,7 @@ apt-get update && apt-get install -y git nodejs npm clang libclang-dev llvm
 npm i -g yarn
 ```
 
-## Installation
-
-Build the instrumented compiler and the LSIF conversion tool:
+### Build the instrumented compiler and the LSIF conversion tool:
 
 ```
 git clone https://github.com/sourcegraph/lsif-cpp
