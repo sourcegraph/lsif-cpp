@@ -4,16 +4,32 @@ Visit https://lsif.dev/ to learn about LSIF.
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/) (macOS: `brew install node`)
-- [Yarn](https://yarnpkg.com/lang/en/) (macOS: `npm i -g yarn`)
+- [Node.js](https://nodejs.org/en/)
+- [Yarn](https://yarnpkg.com/lang/en/)
 - [make](https://www.gnu.org/software/make/)
-- A C++ compiler
+- A C++ compiler with LLVM dev headers (versions 3 through 8 are supported)
+
+**macOS**
+
+```
+brew install git node llvm@8
+npm i -g yarn
+```
+
+**Ubuntu 18.04**
+
+```
+apt-get update && apt-get install -y git nodejs npm clang libclang-dev llvm
+npm i -g yarn
+```
 
 ## Installation
 
 Build the instrumented compiler and the LSIF conversion tool:
 
 ```
+git clone https://github.com/sourcegraph/lsif-cpp
+cd lsif-cpp
 ./build
 ```
 
@@ -29,6 +45,9 @@ env \
   <path to lsif-cpp>/generate-csv "\$CXX -c *.cpp"
 ```
 
+> - `ABSROOTDIR`: the absolute path to your project directory (the script will `cd` here before running the compilation command)
+> - `ABSOUTDIR`: the absolute path to the directory where the generated CSV files will be written
+
 Convert those CSV files into LSIF:
 
 ```
@@ -36,5 +55,9 @@ node \
   <path to lsif-cpp>/out/main.js \
   --csvFileGlob="examples/cross-app/output/*.csv" \
   --root=examples/cross-app/root \
-  --out app.lsif
+  --out examples/cross-app/root/dump.lsif
 ```
+
+> - `--csvFileGlob`: the wildcard pattern that matches all CSV files written to `ABSOUTDIR` by the `generate-csv` command
+> - `--root`: the path to `ABSROOTDIR`
+> - `--out`: the path where the LSIF dump will be written
