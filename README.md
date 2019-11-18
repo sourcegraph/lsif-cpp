@@ -7,7 +7,7 @@ Visit https://lsif.dev/ to learn about LSIF.
 - [Node.js](https://nodejs.org/en/)
 - [Yarn](https://yarnpkg.com/lang/en/)
 - [make](https://www.gnu.org/software/make/)
-- A C++ compiler with LLVM dev headers (versions 3 through 8 are supported)
+- A C++ compiler with LLVM dev headers (versions 3 through 9 are supported)
 
 **macOS**
 
