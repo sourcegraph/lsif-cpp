@@ -459,9 +459,11 @@ async function emitDefsRefs({
                 inV: 'moniker:import:' + def,
                 outV: 'resultSet:' + def,
             })
+            const packageId =
+                'package:' + importMoniker.packageInformation + ':' + def
             // 2.3
             await emit<PackageInformation>({
-                id: 'package:' + importMoniker.packageInformation + ':' + def,
+                id: packageId,
                 label: VertexLabels.packageInformation,
                 type: ElementTypes.vertex,
                 manager: 'cpp',
@@ -477,7 +479,7 @@ async function emitDefsRefs({
                     def,
                 label: EdgeLabels.packageInformation,
                 type: ElementTypes.edge,
-                inV: 'package:' + importMoniker.packageInformation,
+                inV: packageId,
                 outV: 'moniker:import:' + def,
             })
         } else {
@@ -586,9 +588,11 @@ async function emitDefsRefs({
                 inV: 'moniker:export:' + def,
                 outV: 'resultSet:' + def,
             })
+            const packageId =
+                'package:' + exportMoniker.packageInformation + ':' + def
             // 13
             await emit<PackageInformation>({
-                id: 'package:' + exportMoniker.packageInformation + ':' + def,
+                id: packageId,
                 label: VertexLabels.packageInformation,
                 type: ElementTypes.vertex,
                 manager: 'cpp',
@@ -604,7 +608,7 @@ async function emitDefsRefs({
                     def,
                 label: EdgeLabels.packageInformation,
                 type: ElementTypes.edge,
-                inV: 'package:' + exportMoniker.packageInformation,
+                inV: packageId,
                 outV: 'moniker:export:' + def,
             })
         }
