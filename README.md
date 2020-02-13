@@ -25,7 +25,7 @@ apt-get update && apt-get install -y git nodejs npm clang libclang-dev llvm
 npm i -g yarn
 ```
 
-### Build the instrumented compiler and the LSIF conversion tool:
+### Build the C++ compiler plugin and the LSIF conversion tool:
 
 ```
 git clone https://github.com/sourcegraph/lsif-cpp
