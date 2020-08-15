@@ -1,4 +1,4 @@
-# C/C++ LSIF indexer
+# C/C++ LSIF indexer ![](https://img.shields.io/badge/status-beta-orange?style=flat)
 
 Visit https://lsif.dev/ to learn about LSIF.
 
