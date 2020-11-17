@@ -18,12 +18,11 @@ brew install git node llvm@8
 npm i -g yarn
 ```
 
-**Ubuntu 18.04**
+**Debian/Ubuntu**
 
-```
-apt-get update && apt-get install -y git nodejs npm clang libclang-dev llvm
-npm i -g yarn
-```
+1. `apt install clang libclang-dev llvm`
+1. Install Node.js (if it's not already installed): `apt install nodejs npm`
+1. [Install Yarn](https://classic.yarnpkg.com/en/docs/install/#debian-stable)
 
 ### Build the C++ compiler plugin and the LSIF conversion tool:
 
